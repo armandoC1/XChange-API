@@ -18,7 +18,7 @@ public class UsuarioSalida implements Serializable {
 
     private String numeroTelefono;
 
-    private String fotoPerfil;
+    private byte[] fotoPerfil;
 
     private String ubicacion;
 

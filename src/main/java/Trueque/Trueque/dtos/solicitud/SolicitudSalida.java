@@ -1,4 +1,4 @@
-package Trueque.Trueque.dtos.oferta;
+package Trueque.Trueque.dtos.solicitud;
 
 import lombok.*;
 
@@ -7,26 +7,20 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class OfertaSalida implements Serializable {
-
-    private Long idOferta;
+public class SolicitudSalida implements Serializable {
 
     private String titulo;
 
     private String descripcion;
 
-    private String condicion;
-
     private String ubicacion;
-
-    private String imagenes;
 
     private LocalDateTime fechaCreacion;
 
     private String estado;
 
-    private Long idUsuario;
-
     private Long idCategoria;
+
+    private Long idUsuario;
 
 }

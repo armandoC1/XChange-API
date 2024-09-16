@@ -30,6 +30,7 @@ public class OfertaService implements IOfertaService {
 
     @Autowired
     private IUsuarioRepository usuarioRepository;
+
     @Override
     public List<OfertaSalida> obtenerTodos() {
         List<Oferta> ofertas = ofertaRepository.findAll();

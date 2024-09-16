@@ -1,6 +1,7 @@
 package Trueque.Trueque.dtos.usuario;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,13 +18,8 @@ public class UsuarioGuardar  implements Serializable{
 
     private String numeroTelefono;
 
-    private String fotoPerfil;
+    private byte[] fotoPerfil;
 
     private String ubicacion;
 
-    private LocalDateTime fechaCreacion;
-
-    private Double reputacion;
-
-    private Boolean estado;
 }

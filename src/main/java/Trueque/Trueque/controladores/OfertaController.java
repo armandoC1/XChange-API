@@ -80,7 +80,7 @@ public class OfertaController {
     //http://localhost:8080/ofertas/delete/0 <--aqui debe ir el id de la oferta que se quiere borrar
     @DeleteMapping("/delete/{idOferta}")
     public ResponseEntity delete(@PathVariable Long idOferta){
-        OfertaSalida ofertaSalida = ofertaService.obtenerPorId(idOferta);
+        ofertaService.eliminarPorId(idOferta);
         return ResponseEntity.ok("Oferta eliminada excitosamente");
     }
 }

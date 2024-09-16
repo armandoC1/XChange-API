@@ -16,7 +16,7 @@ public class Coincidencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_coincidencia")
-    private Long id;
+    private Long idCoincidencia;
 
     @Column(name = "puntuacion_coincidencia")
     private Double puntuacionCoincidencia;

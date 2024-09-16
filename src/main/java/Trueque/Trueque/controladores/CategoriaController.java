@@ -49,18 +49,21 @@ public class CategoriaController {
         return ResponseEntity.notFound().build();
     }
 
+    //http://localhost:8080/categorias/save
     @PostMapping("/save")
     public ResponseEntity<CategoriaSalida> crear (@RequestBody CategoriaGuardar categoriaGuardar){
         CategoriaSalida categoria = categoriaService.crear(categoriaGuardar);
         return ResponseEntity.ok(categoria);
     }
 
+    //http://localhost:8080/categorias/edit/0 <-- aqui va el id que se quiere editar
     @PutMapping("/edit/{id}")
     public ResponseEntity<CategoriaSalida> editar (@PathVariable Long id, @RequestBody CategoriaModificar categoriaModificar){
         CategoriaSalida categoria = categoriaService.editar(categoriaModificar);
         return ResponseEntity.ok(categoria);
     }
 
+    //http://localhost:8080/categorias/delete/0 <-- aqui va el id que se quiere eliminar
     @DeleteMapping("/delete/{id}")
     public ResponseEntity eliminar (@PathVariable Long id){
         categoriaService.eliminarPorId(id);

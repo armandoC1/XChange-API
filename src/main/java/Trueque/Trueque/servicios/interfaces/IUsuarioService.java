@@ -3,6 +3,7 @@ package Trueque.Trueque.servicios.interfaces;
 import Trueque.Trueque.dtos.usuario.*;
 import org.springframework.data.domain.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public interface IUsuarioService {
@@ -13,9 +14,9 @@ public interface IUsuarioService {
 
     UsuarioSalida obtenenerPorId(Long idUsuario);
 
-    UsuarioSalida crear(UsuarioGuardar usuarioGuardar);
+    UsuarioSalida crear(UsuarioGuardar usuarioGuardar) throws IOException;
 
-    UsuarioSalida editar (UsuarioModificar usuarioModificar);
+    UsuarioSalida editar (UsuarioModificar usuarioModificar) throws IOException;
 
      void eliminarPorId (Long idUsuario);
 }

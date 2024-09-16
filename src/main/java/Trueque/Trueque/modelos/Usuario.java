@@ -29,8 +29,9 @@ public class Usuario {
     @Column(name = "numero_telefono" ,nullable = false)
     private String numeroTelefono;
 
-    @Column(name = "foto_perfil")
-    private String fotoPerfil;
+    @Lob
+    @Column(name = "foto_perfil", columnDefinition = "LONGBLOB")
+    private byte[] fotoPerfil;
 
     @Column(name = "ubicacion" ,nullable = false)
     private String ubicacion;

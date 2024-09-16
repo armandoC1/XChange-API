@@ -4,9 +4,12 @@ import Trueque.Trueque.dtos.usuario.*;
 import Trueque.Trueque.servicios.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -34,10 +37,32 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UsuarioSalida> crear (@RequestBody UsuarioGuardar usuarioGuardar){
-        UsuarioSalida usuarios = usuarioService.crear(usuarioGuardar);
-        return ResponseEntity.ok(usuarios);
+    public ResponseEntity<UsuarioSalida> crear(
+            @RequestPart("nombre") String nombre,
+            @RequestPart("correo") String correo,
+            @RequestPart("contrasena") String contrasena,
+            @RequestPart("numeroTelefono") String numeroTelefono,
+            @RequestPart(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
+            @RequestPart("ubicacion") String ubicacion) throws IOException {
+
+        // Crear el objeto UsuarioGuardar y establecer los valores recibidos
+        UsuarioGuardar usuarioGuardar = new UsuarioGuardar();
+        usuarioGuardar.setNombre(nombre);
+        usuarioGuardar.setCorreo(correo);
+        usuarioGuardar.setContrasena(contrasena);
+        usuarioGuardar.setNumeroTelefono(numeroTelefono);
+        usuarioGuardar.setUbicacion(ubicacion);
+
+        // Si se proporciona una imagen, conviértela a byte[]
+        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+            usuarioGuardar.setFotoPerfil(fotoPerfil.getBytes());
+        }
+
+        // Guardar el usuario
+        UsuarioSalida usuarioCreado = usuarioService.crear(usuarioGuardar);
+        return ResponseEntity.ok(usuarioCreado);
     }
+
 
     @GetMapping("/find/{idUsuario}")
     public ResponseEntity<UsuarioSalida> buscarPorId (@PathVariable Long idUsuario, @RequestBody UsuarioSalida usuarioSalida){
@@ -49,10 +74,33 @@ public class UsuarioController {
 
     }
 
-    @PutMapping("/edit/{idUsuario}")
-    public ResponseEntity<UsuarioSalida> editar (@PathVariable Long idUsuario, @RequestBody UsuarioModificar usuarioModificar){
-        UsuarioSalida salida = usuarioService.editar(usuarioModificar);
-        return ResponseEntity.ok(salida);
+    @PutMapping(value = "/edit/{idUsuario}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UsuarioSalida> editar(
+            @PathVariable Long idUsuario,
+            @RequestPart(value = "nombre", required = false) String nombre,
+            @RequestPart(value = "correo", required = false) String correo,
+            @RequestPart(value = "contrasena", required = false) String contrasena,
+            @RequestPart(value = "numeroTelefono", required = false) String numeroTelefono,
+            @RequestPart(value = "reputacion", required = false) Double reputacion,
+            @RequestPart(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
+            @RequestPart(value = "ubicacion", required = false) String ubicacion) throws IOException {
+
+        UsuarioModificar usuarioModificar = new UsuarioModificar();
+        usuarioModificar.setIdUsuario(idUsuario);
+        usuarioModificar.setNombre(nombre);
+        usuarioModificar.setCorreo(correo);
+        usuarioModificar.setContrasena(contrasena);
+        usuarioModificar.setNumeroTelefono(numeroTelefono);
+        usuarioModificar.setReputacion(reputacion);
+        usuarioModificar.setUbicacion(ubicacion);
+
+        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+            usuarioModificar.setFotoPerfil(fotoPerfil.getBytes());
+        }
+
+        UsuarioSalida usuarioEditado = usuarioService.editar(usuarioModificar);
+
+        return ResponseEntity.ok(usuarioEditado);
     }
 
     @DeleteMapping("/delete/{usuarioId}")

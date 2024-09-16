@@ -1,12 +1,13 @@
 package Trueque.Trueque.dtos.usuario;
 
 import lombok.*;
-import java.io.*;
-import java.time.*;
+import java.io.Serializable;
 
 @Setter
 @Getter
-public class UsuarioModificar implements Serializable{
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsuarioModificar implements Serializable {
 
     private Long idUsuario;
 
@@ -18,14 +19,11 @@ public class UsuarioModificar implements Serializable{
 
     private String numeroTelefono;
 
-    private String fotoPerfil;
+    private byte[] fotoPerfil;
 
     private String ubicacion;
-
-    private LocalDateTime fechaCreacion;
 
     private Double reputacion;
 
     private Boolean estado;
-
 }
