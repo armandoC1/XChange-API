@@ -42,7 +42,7 @@ public class Usuario {
     @Column(name = "reputacion")
     private Double reputacion;
 
-    @Column(name = "estado" ,nullable = false)
+    @Column(name = "estado")
     private Boolean estado;
 
     @OneToMany(mappedBy = "usuario")
