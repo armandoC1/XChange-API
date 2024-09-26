@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -44,9 +46,13 @@ public class OfertaController {
     //http://localhost:8080/ofertas/save
     //aqui se deben pasar los datos pero la fecha y estado lo crea en automatico
     @PostMapping("/save")
-    public ResponseEntity<OfertaSalida> crear (@RequestBody OfertaGuardar ofertaGuardar){
-        OfertaSalida oferta = ofertaService.crear(ofertaGuardar);
-        return ResponseEntity.ok(oferta);
+    public ResponseEntity<OfertaSalida> crear (
+            @RequestParam("imagenes") List<MultipartFile> imagenes,
+            @RequestPart("oferta") OfertaGuardar oferta) throws IOException {
+
+        OfertaSalida ofertaSalida = ofertaService.crear(oferta, imagenes);
+        return ResponseEntity.ok(ofertaSalida);
+
     }
 
     //http://localhost:8080/ofertas/findById/0 <--aqui debe ir el id de la oferta que quieran buscar

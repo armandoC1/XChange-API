@@ -1,5 +1,6 @@
 package Trueque.Trueque.modelos;
 
+import Trueque.Trueque.dtos.usuario.UsuarioSalida;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario extends UsuarioSalida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")

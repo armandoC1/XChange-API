@@ -19,7 +19,7 @@ public class OfertaModificar implements Serializable{
 
     private String ubicacion;
 
-    private String imagenes;
+    private byte[] imagenes;
 
     private String estado;
 

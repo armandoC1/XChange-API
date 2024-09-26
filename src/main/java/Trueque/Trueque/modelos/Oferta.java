@@ -29,8 +29,8 @@ public class Oferta {
     @Column(name = "ubicacion")
     private String ubicacion;
 
-    @Column(name = "imagenes", columnDefinition = "TEXT")
-    private String imagenes;
+    @Column(name = "imagenes", columnDefinition = "LONGBLOB")
+    private  List<byte[]> imagenes;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;

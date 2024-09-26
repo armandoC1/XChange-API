@@ -1,18 +1,16 @@
 package Trueque.Trueque.servicios.implementaciones;
 
 import Trueque.Trueque.dtos.oferta.*;
-import Trueque.Trueque.modelos.Categoria;
-import Trueque.Trueque.modelos.Oferta;
-import Trueque.Trueque.modelos.Usuario;
-import Trueque.Trueque.repositorios.ICategoriaRepository;
-import Trueque.Trueque.repositorios.IOfertaRepository;
-import Trueque.Trueque.repositorios.IUsuarioRepository;
+import Trueque.Trueque.modelos.*;
+import Trueque.Trueque.repositorios.*;
 import Trueque.Trueque.servicios.interfaces.IOfertaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,37 +52,66 @@ public class OfertaService implements IOfertaService {
         return modelMapper.map(ofertaRepository.findById(idOferta).get(), OfertaSalida.class);
     }
 
-    @Override
-    public OfertaSalida crear(OfertaGuardar ofertaGuardar) {
-        // Crear una nueva instancia de Oferta sin usar ModelMapper para los campos conflictivos
-        Oferta oferta = new Oferta();
+//    @Override
+//    public OfertaSalida crear(OfertaGuardar ofertaGuardar) {
+//
+//        Oferta oferta = new Oferta();
+//
+//        oferta.setTitulo(ofertaGuardar.getTitulo());
+//        oferta.setDescripcion(ofertaGuardar.getDescripcion());
+//        oferta.setCondicion(ofertaGuardar.getCondicion());
+//        oferta.setUbicacion(ofertaGuardar.getUbicacion());
+//        oferta.setImagenes(ofertaGuardar.getImagenes());
+//
+//        Categoria categoria = categoriaRepository.findById(ofertaGuardar.getIdCategoria())
+//                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+//
+//        Usuario usuario = usuarioRepository.findById(ofertaGuardar.getIdUsuario())
+//                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+//
+//        oferta.setCategoria(categoria);
+//        oferta.setUsuario(usuario);
+//
+//        oferta = ofertaRepository.save(oferta);
+//
+//        return modelMapper.map(oferta, OfertaSalida.class);
+//    }
 
-        // Mapear las propiedades que no son relaciones (atributos simples)
-        oferta.setTitulo(ofertaGuardar.getTitulo());
-        oferta.setDescripcion(ofertaGuardar.getDescripcion());
-        oferta.setCondicion(ofertaGuardar.getCondicion());
-        oferta.setUbicacion(ofertaGuardar.getUbicacion());
-        oferta.setImagenes(ofertaGuardar.getImagenes());
+@Override
+public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> imagenes) throws IOException  {
 
-        // Cargar la entidad Categoria desde la base de datos
-        Categoria categoria = categoriaRepository.findById(ofertaGuardar.getIdCategoria())
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+    Oferta oferta = new Oferta();
 
-        // Cargar la entidad Usuario desde la base de datos
-        Usuario usuario = usuarioRepository.findById(ofertaGuardar.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    oferta.setTitulo(ofertaGuardar.getTitulo());
+    oferta.setDescripcion(ofertaGuardar.getDescripcion());
+    oferta.setCondicion(ofertaGuardar.getCondicion());
+    oferta.setUbicacion(ofertaGuardar.getUbicacion());
 
-        // Asignar las entidades cargadas a la oferta
-        oferta.setCategoria(categoria);
-        oferta.setUsuario(usuario);
+    List<byte[]> imagenesGuardar = imagenes.stream().
+            map(imagen -> {
+                try{
+                    return imagen.getBytes();
+                }
+                catch (IOException exception){
+                    throw new RuntimeException("Error al obtener las imagenes");
+                }
+            })
+            .collect(Collectors.toList());
+    oferta.setImagenes(imagenesGuardar);
 
-        // Guardar la oferta en la base de datos
-        oferta = ofertaRepository.save(oferta);
+    Categoria categoria = categoriaRepository.findById(ofertaGuardar.getIdCategoria())
+            .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
-        // Devolver la oferta guardada mapeada a DTO OfertaSalida
-        return modelMapper.map(oferta, OfertaSalida.class);
-    }
+    Usuario usuario = usuarioRepository.findById(ofertaGuardar.getIdUsuario())
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+    oferta.setCategoria(categoria);
+    oferta.setUsuario(usuario);
+
+    oferta = ofertaRepository.save(oferta);
+
+    return modelMapper.map(oferta, OfertaSalida.class);
+}
     @Override
     public List<OfertaSalida> buscarPorTitulo(String titulo) {
         List<Oferta> ofertas = ofertaRepository.findByTituloContainingIgnoreCase(titulo);
