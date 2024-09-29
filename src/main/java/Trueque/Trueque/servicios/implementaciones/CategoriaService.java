@@ -6,10 +6,10 @@ import Trueque.Trueque.dtos.categoria.CategoriaModificar;
 import Trueque.Trueque.dtos.categoria.CategoriaSalida;
 import Trueque.Trueque.modelos.Categoria;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
-import Trueque.Trueque.repositorios.ICategoriaRepository;
+import Trueque.Trueque.repositorios.*;
 
 import org.springframework.data.domain.Pageable;
 

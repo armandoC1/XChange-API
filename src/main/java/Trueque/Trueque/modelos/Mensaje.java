@@ -15,8 +15,7 @@ import java.util.*;
 public class Mensaje {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_mensaje")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Para que el ID se genere automáticamente
     private Long id;
 
     @Column(name = "contenido_mensaje", columnDefinition = "TEXT")
@@ -26,19 +25,20 @@ public class Mensaje {
     private LocalDateTime fechaEnvio;
 
     @ManyToOne
-    @JoinColumn(name = "id_coincidencia", nullable = false)
-    private Coincidencia coincidencia;
+    @JoinColumn(name = "id_oferta")  // Definimos la relación con Oferta
+    private Oferta oferta;
 
     @ManyToOne
-    @JoinColumn(name = "id_remitente", nullable = false)
+    @JoinColumn(name = "id_remitente")  // Relación con Usuario como remitente
     private Usuario remitente;
 
     @ManyToOne
-    @JoinColumn(name = "id_destinatario", nullable = false)
+    @JoinColumn(name = "id_destinatario")  // Relación con Usuario como destinatario
     private Usuario destinatario;
 
+
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         this.fechaEnvio = LocalDateTime.now();
     }
 }

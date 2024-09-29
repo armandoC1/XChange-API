@@ -1,7 +1,6 @@
 package Trueque.Trueque.servicios.interfaces;
 
 import Trueque.Trueque.dtos.oferta.*;
-import Trueque.Trueque.modelos.Oferta;
 import org.springframework.data.domain.*;
 import org.springframework.web.multipart.MultipartFile;
 

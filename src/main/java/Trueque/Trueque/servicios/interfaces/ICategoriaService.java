@@ -10,15 +10,16 @@ import org.springframework.data.domain.Pageable;
 import java.util.*;
 
 public interface ICategoriaService {
+
     List<CategoriaSalida> obtenerTodos();
 
     Page<CategoriaSalida> obtenerTodosPaginados(Pageable pageable);
 
-    CategoriaSalida obtenerPorId (Long id);
+    CategoriaSalida obtenerPorId(Long id);
 
     CategoriaSalida crear(CategoriaGuardar categoriaGuardar);
 
-    CategoriaSalida editar (CategoriaModificar categoriaModificar);
+    CategoriaSalida editar(CategoriaModificar categoriaModificar);
 
     void eliminarPorId(Long id);
 }

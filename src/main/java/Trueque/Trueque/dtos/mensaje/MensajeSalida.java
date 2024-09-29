@@ -7,17 +7,13 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MensajeSalida implements Serializable {
-
-    private Long id;  // ID del mensaje
-
-    private String contenidoMensaje;  // Contenido del mensaje
-
-    private LocalDateTime fechaEnvio;  // Fecha de envío del mensaje
-
-    private Long idCoincidencia;  // ID de la coincidencia
-
-    private Long idRemitente;  // ID del remitente
-
-    private Long idDestinatario;  // ID del destinatario
+    private Long id;
+    private String contenidoMensaje;
+    private LocalDateTime fechaEnvio;
+    private Long idOferta;
+    private Long idRemitente;
+    private Long idDestinatario;
 }

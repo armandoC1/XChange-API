@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.*;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface IOfertaRepository extends JpaRepository<Oferta, Long> {
+
     List<Oferta> findByTituloContainingIgnoreCase(String titulo);
 }

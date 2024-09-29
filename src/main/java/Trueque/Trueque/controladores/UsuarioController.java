@@ -1,10 +1,18 @@
 package Trueque.Trueque.controladores;
 
 import Trueque.Trueque.dtos.usuario.*;
+import Trueque.Trueque.servicios.implementaciones.UsuarioService;
 import Trueque.Trueque.servicios.interfaces.IUsuarioService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +25,12 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @GetMapping
     public ResponseEntity<Page<UsuarioSalida>> mostrarTodosPaginados(Pageable pageable){
-        Page<UsuarioSalida> usuarios = usuarioService.obtenerTodoPaaginados(pageable);
+        Page<UsuarioSalida> usuarios = usuarioService.obtenerTodoPaginados(pageable);
         if (usuarios.hasContent()){
             return ResponseEntity.ok(usuarios);
         }
@@ -35,9 +46,23 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/save")
+
+    @PostMapping("/inicio")
+    public ResponseEntity<String> login(@RequestParam String correo, @RequestParam String contrasena) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(correo, contrasena)
+            );
+            return ResponseEntity.ok("Inicio de sesión exitoso");
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
+        }
+    }
+
+    @PermitAll
+    @PostMapping("/register")
     public ResponseEntity<UsuarioSalida> crear(
-            @RequestParam("fotoPerfil") MultipartFile fotoPerfil,
+            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             @RequestPart("usuario") UsuarioGuardar usuario) throws IOException {
 
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
@@ -45,7 +70,7 @@ public class UsuarioController {
         }
 
         UsuarioSalida usuarioCreado = usuarioService.crear(usuario);
-        return ResponseEntity.ok(usuarioCreado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCreado);
     }
 
 

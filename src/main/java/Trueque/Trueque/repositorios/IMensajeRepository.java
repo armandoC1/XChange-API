@@ -1,18 +1,17 @@
 package Trueque.Trueque.repositorios;
 
-import Trueque.Trueque.modelos.*;
+import Trueque.Trueque.modelos.Mensaje;
+import Trueque.Trueque.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.*;
+import java.util.List;
 
 public interface IMensajeRepository extends JpaRepository<Mensaje, Long> {
 
-    // Buscar mensajes por coincidencia
-    List<Mensaje> findByCoincidencia(Coincidencia coincidencia);
+    // Ajustado para usar 'idOferta' correctamente
+    List<Mensaje> findByOfertaIdOfertaAndRemitenteIdUsuarioAndDestinatarioIdUsuario(Long ofertaId, Long remitenteId, Long destinatarioId);
 
-    // Buscar mensajes enviados por un remitente
-    List<Mensaje> findByRemitente(Usuario remitente);
 
-    // Buscar mensajes recibidos por un destinatario
-    List<Mensaje> findByDestinatario(Usuario destinatario);
+    // También obtener todos los mensajes por oferta
+    List<Mensaje> findByOfertaIdOferta(Long idOferta);
 }

@@ -10,7 +10,7 @@ public interface IUsuarioService {
 
     List<UsuarioSalida> obtenerTodos();
 
-    Page<UsuarioSalida> obtenerTodoPaaginados(Pageable pageable);
+    Page<UsuarioSalida> obtenerTodoPaginados(Pageable pageable);
 
     UsuarioSalida obtenenerPorId(Long idUsuario);
 
