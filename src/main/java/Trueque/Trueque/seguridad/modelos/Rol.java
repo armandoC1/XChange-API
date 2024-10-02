@@ -2,6 +2,7 @@ package Trueque.Trueque.seguridad.modelos;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@RestResource(exported = false)
 @Table(name = "roles")
 public class Rol {
     @Id

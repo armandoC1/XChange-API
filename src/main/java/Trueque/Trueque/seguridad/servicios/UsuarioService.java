@@ -113,16 +113,13 @@ public class UsuarioService {
     }
 
     public UsuarioSalida editar(Long idUsuario, UsuarioModificar usuarioEditar) {
-        // Buscar el usuario en la base de datos por su ID
         Usuario usuario = userRepository.findById(idUsuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Actualizar el nombre si se proporciona
         if (usuarioEditar.getNombre() != null && !usuarioEditar.getNombre().isEmpty()) {
             usuario.setNombre(usuarioEditar.getNombre());
         }
 
-        // Actualizar el correo si se proporciona (y verificar si ya existe)
         if (usuarioEditar.getCorreo() != null && !usuarioEditar.getCorreo().isEmpty()) {
             if (userRepository.existsByCorreo(usuarioEditar.getCorreo()) && !usuario.getCorreo().equals(usuarioEditar.getCorreo())) {
                 throw new IllegalArgumentException("El correo ya está en uso");
@@ -130,30 +127,24 @@ public class UsuarioService {
             usuario.setCorreo(usuarioEditar.getCorreo());
         }
 
-        // Cifrar la nueva contraseña si se proporciona
         if (usuarioEditar.getContrasena() != null && !usuarioEditar.getContrasena().isEmpty()) {
             String contrasenaCifrada = passwordEncoder.encode(usuarioEditar.getContrasena());
             usuario.setContrasena(contrasenaCifrada);
         }
 
-        // Asignar foto de perfil si se proporciona
         byte[] fotoPerfil = usuarioEditar.getFotoPerfil();
+
         if (fotoPerfil != null && fotoPerfil.length > 0) {
             usuario.setFotoPerfil(fotoPerfil);
         }
 
-        // Asignar el rol si se proporciona un nuevo ID de rol
         if (usuarioEditar.getIdRol() != null) {
             usuario.setRol(rolService.obtenerPorId(usuarioEditar.getIdRol()));
         }
 
-        // Guardar los cambios en la base de datos
         usuario = userRepository.save(usuario);
 
-        // Mapear de Usuario a UsuarioSalida
         return modelMapper.map(usuario, UsuarioSalida.class);
     }
-
-
 
 }

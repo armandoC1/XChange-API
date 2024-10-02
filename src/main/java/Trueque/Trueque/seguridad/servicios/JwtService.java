@@ -26,7 +26,6 @@ public class JwtService {
     public String getToken(Usuario usuario) {
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_" + usuario.getRol().getNombre().toUpperCase());
-
         HashMap<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", roles);
         return  generarToken(extraClaims, usuario);
@@ -36,7 +35,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(usuario.getUsername()) //aqui cambie
+                .setSubject(usuario.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getKey(), SignatureAlgorithm.HS256)

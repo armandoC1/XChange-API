@@ -1,6 +1,5 @@
 package Trueque.Trueque.seguridad.configuracion;
 
-import Trueque.Trueque.seguridad.modelos.Usuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,17 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                    System.out.println("Usuario autenticado: " + userDetails.getUsername());
-                } else {
-                    System.out.println("Token inválido para el usuario: " + correo);
                 }
-            } else {
-                System.out.println("Correo es nulo o ya existe una autenticación activa.");
             }
-
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            System.out.println("Error en el proceso de autenticación: " + e.getMessage());
             e.printStackTrace();
             filterChain.doFilter(request, response);
         }
