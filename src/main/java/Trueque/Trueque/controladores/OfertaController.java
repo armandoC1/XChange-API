@@ -24,7 +24,8 @@ public class OfertaController {
     @Autowired
     private IOfertaRepository ofertaRepository;
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+    @PreAuthorize("permitAll()")
+
     //http://localhost:8080/ofertas
     @GetMapping
     public ResponseEntity<Page<OfertaSalida>> mostrarTodosPaginados (Pageable pageable){
@@ -47,7 +48,8 @@ public class OfertaController {
             return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+    @PreAuthorize("permitAll()")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/ofertas/save
     //aqui se deben pasar los datos pero la fecha y estado lo crea en automatico
     @PostMapping("/save")
@@ -60,8 +62,9 @@ public class OfertaController {
 
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/ofertas/findById/0 <--aqui debe ir el id de la oferta que quieran buscar
+    @PreAuthorize("permitAll()")
     @GetMapping("/findById/{idOferta}")
     public ResponseEntity<OfertaSalida> obtenerPorId (@PathVariable Long idOferta){
         OfertaSalida oferta = ofertaService.obtenerPorId(idOferta);
@@ -83,7 +86,8 @@ public class OfertaController {
             return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+    @PreAuthorize("permitAll()")
     //http://localhost:8080/ofertas/busar/ xxxx <-- aqui debe ir el nombre de lo que quieren buscar
     @GetMapping("/buscar/{titulo}")
     public ResponseEntity<List<OfertaSalida>> buscarPorTitulo(@PathVariable String titulo) {
@@ -91,7 +95,8 @@ public class OfertaController {
         return ResponseEntity.ok(ofertas);
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+@PreAuthorize("permitAll()")
     //http://localhost:8080/ofertas/delete/0 <--aqui debe ir el id de la oferta que se quiere borrar
     @DeleteMapping("/delete/{idOferta}")
     public ResponseEntity delete(@PathVariable Long idOferta){

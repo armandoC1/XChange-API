@@ -10,15 +10,16 @@ import Trueque.Trueque.servicios.interfaces.ICategoriaService;
 
 import java.util.*;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
     @Autowired
     private ICategoriaService categoriaService;
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/categorias
+@PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<Page<CategoriaSalida>> mostrarTodosPaginados(Pageable pageable){
         Page<CategoriaSalida> categorias = categoriaService.obtenerTodosPaginados(pageable);
@@ -28,9 +29,10 @@ public class CategoriaController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/categorias/lista
     @GetMapping("/lista")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<CategoriaSalida>> mostrarTodos(){
         List<CategoriaSalida> caegorias = categoriaService.obtenerTodos();
         if(!caegorias.isEmpty()){
@@ -39,9 +41,10 @@ public class CategoriaController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/categorias/find/0 <-- aqui va el id que quieren buscar
     @GetMapping("find/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<CategoriaSalida> buscarPorId(@PathVariable Long id){
         CategoriaSalida categoria =categoriaService.obtenerPorId(id);
 
@@ -51,25 +54,28 @@ public class CategoriaController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     //http://localhost:8080/categorias/save
     @PostMapping("/save")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<CategoriaSalida> crear (@RequestBody CategoriaGuardar categoriaGuardar){
         CategoriaSalida categoria = categoriaService.crear(categoriaGuardar);
         return ResponseEntity.ok(categoria);
     }
 
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     //http://localhost:8080/categorias/edit/0 <-- aqui va el id que se quiere editar
+@PreAuthorize("permitAll()")
     @PutMapping("/edit/{id}")
     public ResponseEntity<CategoriaSalida> editar (@PathVariable Long id, @RequestBody CategoriaModificar categoriaModificar){
         CategoriaSalida categoria = categoriaService.editar(categoriaModificar);
         return ResponseEntity.ok(categoria);
     }
 
-    @PreAuthorize("hasRole('admin')")
+//    @PreAuthorize("hasRole('admin')")
     //http://localhost:8080/categorias/delete/0 <-- aqui va el id que se quiere eliminar
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity eliminar (@PathVariable Long id){
         categoriaService.eliminarPorId(id);
         return ResponseEntity.ok("Categoria eliminada exitosamente");

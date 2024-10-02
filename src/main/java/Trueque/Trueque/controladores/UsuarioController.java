@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -21,10 +23,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    //    @PreAuthorize("hasRole('ADMIN')")
-    //   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/login")
     public ResponseEntity<UsuarioToken> login(@RequestBody UsuarioLogin loginRequest){
+        System.out.println("JSON recibido: " + loginRequest);
+        System.out.println("Correo: " + loginRequest.getCorreo());
+        System.out.println("Contraseña: " + loginRequest.getContrasena());
         return ResponseEntity.ok(usuarioService.login(loginRequest));
     }
 

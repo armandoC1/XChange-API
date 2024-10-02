@@ -78,7 +78,6 @@ public class UsuarioService {
                 .build();
     }
 
-
     public UsuarioSalida obtenenerPorId(Long idUsuario) {
 
         Optional<Usuario>  usuarioOpt = userRepository.findById(idUsuario);

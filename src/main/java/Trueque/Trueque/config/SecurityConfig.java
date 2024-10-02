@@ -28,13 +28,25 @@ import java.util.Arrays;
         private AuthenticationProvider authProvider;
 
         @Bean
+        CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Cambia según el dominio de tu frontend
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+            configuration.setAllowedHeaders(Arrays.asList("*"));
+            configuration.setAllowCredentials(true);
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
+        }
+
+        @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
             return httpSecurity
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(csrf->csrf.disable())
                    .authorizeHttpRequests(authRequest -> authRequest
                             .requestMatchers("/usuarios/login", "/usuarios/registro", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api/auth/**").permitAll()
-                            .anyRequest().authenticated()
+                              .anyRequest().authenticated()
                     )
                     .sessionManagement(sessionManager ->
                             sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -43,15 +55,6 @@ import java.util.Arrays;
                     .build();
         }
 
-        @Bean
-        CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("*"));  // Reemplaza con tu dominio
-            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
-            configuration.setAllowedHeaders(Arrays.asList("*")); //http://localhost:3000
-            configuration.setAllowCredentials(false);
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
+
+
     }
