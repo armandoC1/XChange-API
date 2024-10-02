@@ -1,4 +1,5 @@
 package Trueque.Trueque.modelos;
+import Trueque.Trueque.seguridad.modelos.Usuario;
 
 import jakarta.persistence.*;
 import lombok.*;

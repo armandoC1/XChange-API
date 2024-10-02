@@ -1,18 +1,28 @@
-package Trueque.Trueque.modelos;
+package Trueque.Trueque.seguridad.modelos;
 
-import Trueque.Trueque.dtos.usuario.UsuarioSalida;
+import Trueque.Trueque.modelos.Calificacion;
+import Trueque.Trueque.modelos.Intercambio;
+import Trueque.Trueque.modelos.Oferta;
+import Trueque.Trueque.modelos.Solicitud;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
+@Builder
+@Entity
 @NoArgsConstructor
-@Table(name = "usuarios")
-public class Usuario extends UsuarioSalida {
+@AllArgsConstructor
+@Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "correo_electronico"))
+public class Usuario implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -21,7 +31,8 @@ public class Usuario extends UsuarioSalida {
     @Column(name = "nombre_usuario" ,nullable = false)
     private String nombre;
 
-    @Column(name = "correo_electronico" ,nullable = false)
+
+    @Column(name = "correo_electronico" ,nullable = false ,unique = true)
     private String correo;
 
     @Column(name = "contrasena" ,nullable = false)
@@ -39,6 +50,10 @@ public class Usuario extends UsuarioSalida {
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
+
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private Rol rol;
 
     @Column(name = "reputacion")
     private Double reputacion;
@@ -64,10 +79,48 @@ public class Usuario extends UsuarioSalida {
     @OneToMany(mappedBy = "usuarioCalificado")
     private List<Calificacion> calificacionesRecibidas;
 
+
+
     @PrePersist
     protected void onCreate(){
         this.fechaCreacion = LocalDateTime.now();
         this.reputacion = 0.00;
         this.estado = true;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority((rol.getNombre())));
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasena;
+    }
+
+    @Override
+    public String getUsername() {
+        return correo;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

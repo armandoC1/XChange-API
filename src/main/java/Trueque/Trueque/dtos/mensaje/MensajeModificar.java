@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 public class MensajeModificar implements Serializable {
 
-    private Long id;  // ID del mensaje que se va a modificar
+    private Long id;
 
-    private String contenidoMensaje;  // El nuevo contenido del mensaje
+    private String contenidoMensaje;
 }

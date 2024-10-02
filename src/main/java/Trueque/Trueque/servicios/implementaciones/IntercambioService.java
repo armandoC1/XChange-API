@@ -1,21 +1,15 @@
 package Trueque.Trueque.servicios.implementaciones;
 
-import Trueque.Trueque.dtos.intercambio.IntercambioGuardar;
-import Trueque.Trueque.dtos.intercambio.IntercambioModificar;
-import Trueque.Trueque.dtos.intercambio.IntercambioSalida;
-import Trueque.Trueque.modelos.Intercambio;
-import Trueque.Trueque.modelos.Oferta;
-import Trueque.Trueque.modelos.Solicitud;
-import Trueque.Trueque.modelos.Usuario;
-import Trueque.Trueque.repositorios.IIntercambioRepository;
-import Trueque.Trueque.repositorios.IOfertaRepository;
-import Trueque.Trueque.repositorios.ISolicitudRepository;
-import Trueque.Trueque.repositorios.IUsuarioRepository;
+import Trueque.Trueque.dtos.intercambio.*;
+
+import Trueque.Trueque.modelos.*;
+import Trueque.Trueque.repositorios.*;
+import Trueque.Trueque.seguridad.modelos.Usuario;
+import Trueque.Trueque.seguridad.repositorios.UsuarioRepository;
 import Trueque.Trueque.servicios.interfaces.IIntercambioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,7 +30,7 @@ public class IntercambioService implements IIntercambioService {
     private ISolicitudRepository solicitudRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public List<IntercambioSalida> obtenerTodos() {

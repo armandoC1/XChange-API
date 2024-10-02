@@ -1,15 +1,14 @@
-package Trueque.Trueque.dtos.usuario;
+package Trueque.Trueque.seguridad.dtos.usuario;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UsuarioModificar implements Serializable {
-
-    private Long idUsuario;
+@Setter
+public class UsuarioGuardar  implements Serializable{
 
     private String nombre;
 
@@ -23,7 +22,4 @@ public class UsuarioModificar implements Serializable {
 
     private String ubicacion;
 
-    private Double reputacion;
-
-    private Boolean estado;
 }

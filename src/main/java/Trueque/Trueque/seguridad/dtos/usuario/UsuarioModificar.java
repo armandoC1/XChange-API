@@ -1,12 +1,13 @@
-package Trueque.Trueque.dtos.usuario;
+package Trueque.Trueque.seguridad.dtos.usuario;
 
 import lombok.*;
-import java.io.*;
-import java.time.*;
+import java.io.Serializable;
 
-@Getter
 @Setter
-public class UsuarioSalida implements Serializable {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsuarioModificar implements Serializable {
 
     private Long idUsuario;
 
@@ -14,7 +15,7 @@ public class UsuarioSalida implements Serializable {
 
     private String correo;
 
-    //private String contrasena; //la pora
+    private String contrasena;
 
     private String numeroTelefono;
 
@@ -22,9 +23,9 @@ public class UsuarioSalida implements Serializable {
 
     private String ubicacion;
 
-    private LocalDateTime fechaCreacion;
-
     private Double reputacion;
 
     private Boolean estado;
+
+    private Integer idRol;
 }

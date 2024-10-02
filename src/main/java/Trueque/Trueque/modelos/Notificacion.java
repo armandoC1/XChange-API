@@ -1,11 +1,11 @@
 package Trueque.Trueque.modelos;
 
 
+import Trueque.Trueque.seguridad.modelos.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Entity
 @Getter

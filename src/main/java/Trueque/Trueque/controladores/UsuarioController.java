@@ -1,42 +1,47 @@
 package Trueque.Trueque.controladores;
 
-import Trueque.Trueque.dtos.usuario.*;
-import Trueque.Trueque.servicios.implementaciones.UsuarioService;
-import Trueque.Trueque.servicios.interfaces.IUsuarioService;
-import jakarta.annotation.security.PermitAll;
+import Trueque.Trueque.seguridad.dtos.UsuarioLogin;
+import Trueque.Trueque.seguridad.dtos.UsuarioRegistrar;
+import Trueque.Trueque.seguridad.dtos.UsuarioToken;
+import Trueque.Trueque.seguridad.dtos.usuario.UsuarioModificar;
+import Trueque.Trueque.seguridad.dtos.usuario.UsuarioSalida;
+import Trueque.Trueque.seguridad.servicios.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    @Autowired
-    private IUsuarioService usuarioService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private UsuarioService usuarioService;
 
-    @GetMapping
-    public ResponseEntity<Page<UsuarioSalida>> mostrarTodosPaginados(Pageable pageable){
-        Page<UsuarioSalida> usuarios = usuarioService.obtenerTodoPaginados(pageable);
-        if (usuarios.hasContent()){
-            return ResponseEntity.ok(usuarios);
-        }
-             return ResponseEntity.notFound().build();
+    //    @PreAuthorize("hasRole('ADMIN')")
+    //   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioToken> login(@RequestBody UsuarioLogin loginRequest){
+        return ResponseEntity.ok(usuarioService.login(loginRequest));
     }
 
+    @PostMapping("/registro")
+    public ResponseEntity<UsuarioToken> registro(
+            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
+            @RequestPart("usuario") UsuarioRegistrar registroRequest) throws IOException {
+
+        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
+            registroRequest.setFotoPerfil(fotoPerfil.getBytes());
+        }
+
+        return ResponseEntity.ok(usuarioService.registro(registroRequest));
+    }
+
+
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/listado")
     public ResponseEntity<List<UsuarioSalida>> mostrarTodos(){
         List<UsuarioSalida> usuarios = usuarioService.obtenerTodos();
@@ -46,44 +51,17 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-
-    @PostMapping("/inicio")
-    public ResponseEntity<String> login(@RequestParam String correo, @RequestParam String contrasena) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(correo, contrasena)
-            );
-            return ResponseEntity.ok("Inicio de sesión exitoso");
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
-        }
-    }
-
-    @PermitAll
-    @PostMapping("/register")
-    public ResponseEntity<UsuarioSalida> crear(
-            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
-            @RequestPart("usuario") UsuarioGuardar usuario) throws IOException {
-
-        if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
-            usuario.setFotoPerfil(fotoPerfil.getBytes());
-        }
-
-        UsuarioSalida usuarioCreado = usuarioService.crear(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioCreado);
-    }
-
-
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     @GetMapping("/find/{idUsuario}")
-    public ResponseEntity<UsuarioSalida> buscarPorId (@PathVariable Long idUsuario, @RequestBody UsuarioSalida usuarioSalida){
+    public ResponseEntity<UsuarioSalida> buscarPorId (@PathVariable Long idUsuario){
         UsuarioSalida salida = usuarioService.obtenenerPorId(idUsuario);
         if (salida != null){
             return ResponseEntity.ok(salida);
         }
         return ResponseEntity.notFound().build();
-
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     @PutMapping("/edit/{idUsuario}")
     public ResponseEntity<UsuarioSalida> editar(
             @PathVariable Long idUsuario,
@@ -96,15 +74,9 @@ public class UsuarioController {
             usuarioModificar.setFotoPerfil(fotoPerfil.getBytes());
         }
 
-        UsuarioSalida usuarioEditado = usuarioService.editar(usuarioModificar);
+        UsuarioSalida usuarioEditado = usuarioService.editar(idUsuario,usuarioModificar);
 
         return ResponseEntity.ok(usuarioEditado);
     }
 
-
-    @DeleteMapping("/delete/{usuarioId}")
-    public ResponseEntity eliminar (@PathVariable Long usuarioId){
-        usuarioService.eliminarPorId(usuarioId);
-        return ResponseEntity.ok("Usuario eliminado excitosamente");
-    }
 }

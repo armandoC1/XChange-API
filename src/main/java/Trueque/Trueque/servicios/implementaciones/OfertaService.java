@@ -1,8 +1,10 @@
 package Trueque.Trueque.servicios.implementaciones;
 
+import Trueque.Trueque.seguridad.modelos.Usuario;
 import Trueque.Trueque.dtos.oferta.*;
 import Trueque.Trueque.modelos.*;
 import Trueque.Trueque.repositorios.*;
+import Trueque.Trueque.seguridad.repositorios.UsuarioRepository;
 import Trueque.Trueque.servicios.interfaces.IOfertaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.*;
@@ -27,13 +29,25 @@ public class OfertaService implements IOfertaService {
     private ICategoriaRepository categoriaRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public List<OfertaSalida> obtenerTodos() {
         List<Oferta> ofertas = ofertaRepository.findAll();
         return ofertas.stream()
-                .map(oferta -> modelMapper.map(oferta , OfertaSalida.class))
+                .map(oferta -> {
+                    OfertaSalida dto = modelMapper.map(oferta, OfertaSalida.class);
+
+                    List<byte[]> imagenesDTO = new ArrayList<>();
+
+                    for (byte[] imagen : oferta.getImagenes()) {
+                        imagenesDTO.add(imagen);
+                    }
+
+                    dto.setImagenes(imagenesDTO);
+
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -52,30 +66,6 @@ public class OfertaService implements IOfertaService {
         return modelMapper.map(ofertaRepository.findById(idOferta).get(), OfertaSalida.class);
     }
 
-//    @Override
-//    public OfertaSalida crear(OfertaGuardar ofertaGuardar) {
-//
-//        Oferta oferta = new Oferta();
-//
-//        oferta.setTitulo(ofertaGuardar.getTitulo());
-//        oferta.setDescripcion(ofertaGuardar.getDescripcion());
-//        oferta.setCondicion(ofertaGuardar.getCondicion());
-//        oferta.setUbicacion(ofertaGuardar.getUbicacion());
-//        oferta.setImagenes(ofertaGuardar.getImagenes());
-//
-//        Categoria categoria = categoriaRepository.findById(ofertaGuardar.getIdCategoria())
-//                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
-//
-//        Usuario usuario = usuarioRepository.findById(ofertaGuardar.getIdUsuario())
-//                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-//
-//        oferta.setCategoria(categoria);
-//        oferta.setUsuario(usuario);
-//
-//        oferta = ofertaRepository.save(oferta);
-//
-//        return modelMapper.map(oferta, OfertaSalida.class);
-//    }
 
 @Override
 public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> imagenes) throws IOException  {
@@ -115,39 +105,32 @@ public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> image
     @Override
     public List<OfertaSalida> buscarPorTitulo(String titulo) {
         List<Oferta> ofertas = ofertaRepository.findByTituloContainingIgnoreCase(titulo);
-        // Mapear las entidades Oferta a OfertaSalida
+
         return ofertas.stream()
                 .map(oferta -> modelMapper.map(oferta, OfertaSalida.class))
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public OfertaSalida editar(OfertaModificar ofertaModificar) {
-        // Cargar la oferta existente desde la base de datos
+
         Oferta ofertaExistente = ofertaRepository.findById(ofertaModificar.getIdOferta())
                 .orElseThrow(() -> new RuntimeException("La oferta con ID " + ofertaModificar.getIdOferta() + " no existe."));
 
-        // Mapear solo los campos que se deben actualizar
         modelMapper.map(ofertaModificar, ofertaExistente);
 
-        // Cargar el usuario y la categoría desde la base de datos
         Usuario usuario = usuarioRepository.findById(ofertaModificar.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("El usuario con ID " + ofertaModificar.getIdUsuario() + " no existe."));
         Categoria categoria = categoriaRepository.findById(ofertaModificar.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("La categoría con ID " + ofertaModificar.getIdCategoria() + " no existe."));
 
-        // Asignar el usuario y la categoría a la oferta
         ofertaExistente.setUsuario(usuario);
         ofertaExistente.setCategoria(categoria);
 
-        // Guardar la oferta actualizada
         ofertaExistente = ofertaRepository.save(ofertaExistente);
 
-        // Retornar la oferta actualizada mapeada a un DTO de salida
         return modelMapper.map(ofertaExistente, OfertaSalida.class);
     }
-
 
     @Override
     public void eliminarPorId(Long idOferta) {

@@ -1,9 +1,6 @@
 package Trueque.Trueque.servicios.interfaces;
 
-import Trueque.Trueque.dtos.oferta.*;
-import Trueque.Trueque.dtos.solicitud.SolicitudGuardar;
-import Trueque.Trueque.dtos.solicitud.SolicitudModificar;
-import Trueque.Trueque.dtos.solicitud.SolicitudSalida;
+import Trueque.Trueque.dtos.solicitud.*;
 import org.springframework.data.domain.*;
 
 import java.util.*;

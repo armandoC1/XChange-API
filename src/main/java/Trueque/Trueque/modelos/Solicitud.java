@@ -2,7 +2,7 @@ package Trueque.Trueque.modelos;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import Trueque.Trueque.seguridad.modelos.Usuario;
 import java.time.LocalDateTime;
 import java.util.List;
 

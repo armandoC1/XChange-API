@@ -3,13 +3,11 @@ package Trueque.Trueque.servicios.implementaciones;
 import Trueque.Trueque.dtos.solicitud.SolicitudGuardar;
 import Trueque.Trueque.dtos.solicitud.SolicitudModificar;
 import Trueque.Trueque.dtos.solicitud.SolicitudSalida;
-import Trueque.Trueque.dtos.usuario.*;
+import Trueque.Trueque.seguridad.modelos.Usuario;
 import Trueque.Trueque.modelos.Categoria;
 import Trueque.Trueque.modelos.Solicitud;
-import Trueque.Trueque.modelos.Usuario;
-import Trueque.Trueque.repositorios.ICategoriaRepository;
-import Trueque.Trueque.repositorios.ISolicitudRepository;
-import Trueque.Trueque.repositorios.IUsuarioRepository;
+import Trueque.Trueque.repositorios.*;
+import Trueque.Trueque.seguridad.repositorios.UsuarioRepository;
 import Trueque.Trueque.servicios.interfaces.ISolicitudServe;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class SolicitudService implements ISolicitudServe {
     private ModelMapper modelMapper;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ICategoriaRepository categoriaRepository;

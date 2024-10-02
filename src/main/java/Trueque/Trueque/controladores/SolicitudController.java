@@ -8,6 +8,7 @@ import Trueque.Trueque.servicios.interfaces.ISolicitudServe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.SocketImpl;
@@ -23,6 +24,7 @@ public class SolicitudController {
     @Autowired
     private ISolicitudRepository solicitudRepository;
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes
     @GetMapping
     public ResponseEntity<Page<SolicitudSalida>> mostrarTodosPaginados(Pageable pageable) {
@@ -35,6 +37,7 @@ public class SolicitudController {
 
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes/listado
     @GetMapping("/listado")
     public ResponseEntity<List<SolicitudSalida>> mostrarTodos(){
@@ -46,6 +49,7 @@ public class SolicitudController {
             return ResponseEntity.ok(solicitud);
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes/save
     @PostMapping("/save")
     public ResponseEntity<SolicitudSalida> crear (@RequestBody SolicitudGuardar solicitudGuardar){
@@ -53,6 +57,7 @@ public class SolicitudController {
         return ResponseEntity.ok(solicitudSalida);
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes/findById/0 <-- aqui debe ir el id
     @GetMapping("/findbyId/{idSolicitud}")
     public ResponseEntity<SolicitudSalida> obtenerPorId (@PathVariable Long idSolicitud, @RequestBody SolicitudModificar solicitudModificar){
@@ -64,6 +69,7 @@ public class SolicitudController {
             return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes/edit/0 <-- aqui debe ir el id la solicitud que queiren modoifcar
     @PutMapping("/edit/{idSolicitud}")
     public ResponseEntity<SolicitudSalida> editar (@PathVariable Long idSolicitud, @RequestBody SolicitudModificar solicitudModificar){
@@ -74,6 +80,7 @@ public class SolicitudController {
             return ResponseEntity.notFound().build();
     }
 
+    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/solicitudes/delete/0 <-- aqui va el id del registro que quieran borrar
     @DeleteMapping("/delete/{idSolicitud}")
     public ResponseEntity delete ( @PathVariable Long idSolicitud){

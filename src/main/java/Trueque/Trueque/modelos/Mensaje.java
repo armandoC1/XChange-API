@@ -1,11 +1,10 @@
 package Trueque.Trueque.modelos;
-
+import Trueque.Trueque.seguridad.modelos.Usuario;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Entity
 @Getter
@@ -15,7 +14,7 @@ import java.util.*;
 public class Mensaje {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Para que el ID se genere automáticamente
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "contenido_mensaje", columnDefinition = "TEXT")
@@ -25,15 +24,15 @@ public class Mensaje {
     private LocalDateTime fechaEnvio;
 
     @ManyToOne
-    @JoinColumn(name = "id_oferta")  // Definimos la relación con Oferta
+    @JoinColumn(name = "id_oferta")
     private Oferta oferta;
 
     @ManyToOne
-    @JoinColumn(name = "id_remitente")  // Relación con Usuario como remitente
+    @JoinColumn(name = "id_remitente")
     private Usuario remitente;
 
     @ManyToOne
-    @JoinColumn(name = "id_destinatario")  // Relación con Usuario como destinatario
+    @JoinColumn(name = "id_destinatario")
     private Usuario destinatario;
 
 

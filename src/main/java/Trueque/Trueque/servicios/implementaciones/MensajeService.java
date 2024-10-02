@@ -1,8 +1,10 @@
 package Trueque.Trueque.servicios.implementaciones;
 
+import Trueque.Trueque.seguridad.modelos.Usuario;
 import Trueque.Trueque.dtos.mensaje.*;
 import Trueque.Trueque.modelos.*;
 import Trueque.Trueque.repositorios.*;
+import Trueque.Trueque.seguridad.repositorios.UsuarioRepository;
 import Trueque.Trueque.servicios.interfaces.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class MensajeService implements IMensajeService {
     private IOfertaRepository ofertaRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -48,7 +50,7 @@ public class MensajeService implements IMensajeService {
             mensaje = mensajeRepository.save(mensaje);
             return modelMapper.map(mensaje, MensajeSalida.class);
         }
-        return null;  // Manejar el caso de error adecuadamente
+        return null;
     }
 
     @Override
