@@ -44,7 +44,7 @@ public class UsuarioController {
     }
 
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("permitAll()")
     @GetMapping("/listado")
     public ResponseEntity<List<UsuarioSalida>> mostrarTodos(){
         List<UsuarioSalida> usuarios = usuarioService.obtenerTodos();
@@ -54,7 +54,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+    @PreAuthorize("permitAll()")
     @GetMapping("/find/{idUsuario}")
     public ResponseEntity<UsuarioSalida> buscarPorId (@PathVariable Long idUsuario){
         UsuarioSalida salida = usuarioService.obtenenerPorId(idUsuario);
@@ -64,7 +64,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+    @PreAuthorize("permitAll()")
     @PutMapping("/edit/{idUsuario}")
     public ResponseEntity<UsuarioSalida> editar(
             @PathVariable Long idUsuario,
