@@ -30,7 +30,7 @@ import java.util.Arrays;
         @Bean
         CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Cambia según el dominio de tu frontend
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
             configuration.setAllowedHeaders(Arrays.asList("*"));
             configuration.setAllowCredentials(true);

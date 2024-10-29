@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class IntercambioModificar implements Serializable {
 
     private Long idIntercambio;

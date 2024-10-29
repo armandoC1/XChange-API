@@ -8,6 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class OfertaSalida implements Serializable {
 
     private Long idOferta;

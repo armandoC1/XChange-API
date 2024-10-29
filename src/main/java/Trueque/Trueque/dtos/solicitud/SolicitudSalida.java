@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SolicitudSalida implements Serializable {
 
     private String titulo;

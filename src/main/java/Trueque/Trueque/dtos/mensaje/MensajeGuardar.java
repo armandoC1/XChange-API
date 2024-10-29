@@ -4,6 +4,8 @@ import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MensajeGuardar implements Serializable {
 
     private String contenidoMensaje;

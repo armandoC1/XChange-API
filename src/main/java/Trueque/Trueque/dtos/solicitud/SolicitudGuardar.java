@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SolicitudGuardar implements Serializable {
 
     private String titulo;

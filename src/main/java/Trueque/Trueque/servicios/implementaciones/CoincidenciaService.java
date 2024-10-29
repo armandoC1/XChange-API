@@ -20,7 +20,6 @@ public class CoincidenciaService implements ICoincidenciaService {
     @Autowired
     private ISolicitudRepository solicitudRepository;
 
-
     @Override
     public Coincidencia crearCoincidencia(Long idOferta, Long idSolicitud) {
 

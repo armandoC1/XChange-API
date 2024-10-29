@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -36,13 +36,14 @@ public class UsuarioController {
             @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             @RequestPart("usuario") UsuarioRegistrar registroRequest) throws IOException {
 
+        System.out.println("Cuerpo del json: "+ registroRequest);
+        System.out.println("imagen: "+ fotoPerfil);
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             registroRequest.setFotoPerfil(fotoPerfil.getBytes());
         }
 
         return ResponseEntity.ok(usuarioService.registro(registroRequest));
     }
-
 
     @PreAuthorize("permitAll()")
     @GetMapping("/listado")
