@@ -9,5 +9,4 @@ public class TruequeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TruequeApplication.class, args);
 	}
-
 }

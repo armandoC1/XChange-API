@@ -68,7 +68,7 @@ public class CategoriaController {
 @PreAuthorize("permitAll()")
     @PutMapping("/edit/{id}")
     public ResponseEntity<CategoriaSalida> editar (@PathVariable Long id, @RequestBody CategoriaModificar categoriaModificar){
-        CategoriaSalida categoria = categoriaService.editar(categoriaModificar);
+        CategoriaSalida categoria = categoriaService.editar(id, categoriaModificar);
         return ResponseEntity.ok(categoria);
     }
 

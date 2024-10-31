@@ -112,12 +112,28 @@ public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> image
     }
 
     @Override
-    public OfertaSalida editar(OfertaModificar ofertaModificar) {
+    public OfertaSalida editar(Long idOferta, OfertaModificar ofertaModificar, List<MultipartFile> imagenes) throws IOException {
 
-        Oferta ofertaExistente = ofertaRepository.findById(ofertaModificar.getIdOferta())
-                .orElseThrow(() -> new RuntimeException("La oferta con ID " + ofertaModificar.getIdOferta() + " no existe."));
+        Oferta ofertaExistente = ofertaRepository.findById(idOferta)
+                .orElseThrow(() -> new RuntimeException("La oferta con ID " + idOferta + " no existe."));
 
-        modelMapper.map(ofertaModificar, ofertaExistente);
+        ofertaExistente.setTitulo(ofertaModificar.getTitulo());
+        ofertaExistente.setDescripcion(ofertaModificar.getDescripcion());
+        ofertaExistente.setCondicion(ofertaModificar.getCondicion());
+        ofertaExistente.setUbicacion(ofertaModificar.getUbicacion());
+
+        if (imagenes != null && !imagenes.isEmpty()) {
+            List<byte[]> imagenesBytes = imagenes.stream()
+                    .map(imagen -> {
+                        try {
+                            return imagen.getBytes();
+                        } catch (IOException e) {
+                            throw new RuntimeException("Error al procesar las imágenes", e);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            ofertaExistente.setImagenes(imagenesBytes);
+        }
 
         Usuario usuario = usuarioRepository.findById(ofertaModificar.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("El usuario con ID " + ofertaModificar.getIdUsuario() + " no existe."));

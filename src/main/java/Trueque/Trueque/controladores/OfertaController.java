@@ -74,18 +74,21 @@ public class OfertaController {
             return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
+//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/ofertas/edit/0 <-- aqui debe ir el id de la oferta que quieren editar
-    //aqui si deben decirle si el estado es activo o no pero la fecha la mantiene en la fecha que fue creada
     @PutMapping("/edit/{idOferta}")
-    public ResponseEntity<OfertaSalida> editar (@PathVariable Long idOferta, @RequestBody OfertaModificar ofertaModificar){
-        OfertaSalida salida = ofertaService.editar(ofertaModificar);
-        if (salida != null) {
-            return ResponseEntity.ok(salida);
-        }
-            return ResponseEntity.notFound().build();
-    }
+    public ResponseEntity<OfertaSalida> editar(
+          @PathVariable Long idOferta,
+          @RequestParam("imagenes") List<MultipartFile> imagenes,
+         @RequestPart("oferta") OfertaModificar ofertaModificar) throws IOException {
 
+     OfertaSalida salida = ofertaService.editar(idOferta, ofertaModificar, imagenes);
+
+     if (salida != null) {
+        return ResponseEntity.ok(salida);
+     }
+     return ResponseEntity.notFound().build();
+}
 //    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     @PreAuthorize("permitAll()")
     //http://localhost:8080/ofertas/busar/ xxxx <-- aqui debe ir el nombre de lo que quieren buscar

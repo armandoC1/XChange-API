@@ -19,7 +19,7 @@ public interface ICategoriaService {
 
     CategoriaSalida crear(CategoriaGuardar categoriaGuardar);
 
-    CategoriaSalida editar(CategoriaModificar categoriaModificar);
+    CategoriaSalida editar(Long id, CategoriaModificar categoriaModificar);
 
     void eliminarPorId(Long id);
 }

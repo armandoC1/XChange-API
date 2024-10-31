@@ -55,9 +55,15 @@ public class CategoriaService implements ICategoriaService {
     }
 
     @Override
-    public CategoriaSalida editar(CategoriaModificar categoriaModificar) {
-        Categoria categoria = categoriaRepository.save(modelMapper.map(categoriaModificar, Categoria.class));
-        return modelMapper.map(categoria, CategoriaSalida.class);
+    public CategoriaSalida editar(Long id, CategoriaModificar categoriaModificar) {
+
+        Categoria categoriaExistente = categoriaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La categoría con ID " + id + " no existe."));
+
+        categoriaExistente.setNombre(categoriaModificar.getNombre());
+        categoriaExistente = categoriaRepository.save(categoriaExistente);
+
+        return modelMapper.map(categoriaExistente, CategoriaSalida.class);
     }
 
     @Override

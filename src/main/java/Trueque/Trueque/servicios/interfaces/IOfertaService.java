@@ -19,7 +19,7 @@ public interface IOfertaService {
 
     List<OfertaSalida> buscarPorTitulo(String titulo);
 
-    OfertaSalida editar (OfertaModificar ofertaModificar);
+    OfertaSalida editar(Long idOferta, OfertaModificar ofertaModificar, List<MultipartFile> imagenes) throws IOException;
 
     void eliminarPorId (Long idOferta);
 
