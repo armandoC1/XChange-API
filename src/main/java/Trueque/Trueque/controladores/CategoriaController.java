@@ -19,7 +19,7 @@ public class CategoriaController {
 
 //    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     //http://localhost:8080/categorias
-@PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<Page<CategoriaSalida>> mostrarTodosPaginados(Pageable pageable){
         Page<CategoriaSalida> categorias = categoriaService.obtenerTodosPaginados(pageable);
