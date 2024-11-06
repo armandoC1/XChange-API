@@ -45,7 +45,7 @@ import java.util.Arrays;
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .csrf(csrf->csrf.disable())
                    .authorizeHttpRequests(authRequest -> authRequest
-                            .requestMatchers("/usuarios/login", "/usuarios/registro", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api/auth/**").permitAll()
+                            .requestMatchers("/api/usuarios/login", "/api/usuarios/registro", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api/auth/**").permitAll()
                               .anyRequest().authenticated()
                     )
                     .sessionManagement(sessionManager ->
