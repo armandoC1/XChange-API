@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/intercambios")
+@RequestMapping("/api/intercambios")
 public class IntercambioController {
 
     private IntercambioService intercambioService;
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    @GetMapping("/listado")
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public List<IntercambioSalida> obtenerTodos() {
         return intercambioService.obtenerTodos();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    // Obtener intercambios paginados
-    @GetMapping("/paginados")
+    @GetMapping("/lisPage")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public Page<IntercambioSalida> obtenerTodoPaginados(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -35,16 +35,14 @@ public class IntercambioController {
         return intercambioService.obtenerTodoPaginados(pageable);
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    // Obtener intercambio por ID
-    @GetMapping("edit/{id}")
+    @GetMapping("/findById/{id}")
+    @PreAuthorize("hasAuthority('usuario')")
     public IntercambioSalida obtenerPorId(@PathVariable("id") Long id) {
         return intercambioService.obtenerPorId(id);
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    // Confirmar intercambio (crear intercambio)
-    @PostMapping("/confirmar")
+    @PostMapping("/confirm")
+    @PreAuthorize(" hasAuthority('usuario')")
     public IntercambioSalida confirmarIntercambio(@RequestBody IntercambioGuardar intercambioGuardar) {
         return intercambioService.crear(intercambioGuardar);
     }

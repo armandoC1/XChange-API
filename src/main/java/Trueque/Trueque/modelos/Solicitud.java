@@ -3,6 +3,7 @@ package Trueque.Trueque.modelos;
 import jakarta.persistence.*;
 import lombok.*;
 import Trueque.Trueque.seguridad.modelos.Usuario;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "solicitudes")
 public class Solicitud {
     @Id
@@ -26,6 +28,9 @@ public class Solicitud {
     @Column(name = "ubicacion")
     private String ubicacion;
 
+    @Column(name = "imagen", columnDefinition = "LONGBLOB")
+    private List<byte[]> imagenes;
+
     @Column(name = "fecha_creaciom")
     private LocalDateTime fechaCreacion;
 
@@ -33,11 +38,11 @@ public class Solicitud {
     private String estado;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario" , nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria" , nullable = false)
+    @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
     @OneToMany(mappedBy = "solicitud")
@@ -47,7 +52,7 @@ public class Solicitud {
     private List<Intercambio> intercambios;
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         this.fechaCreacion = LocalDateTime.now();
         this.estado = "activo";
     }

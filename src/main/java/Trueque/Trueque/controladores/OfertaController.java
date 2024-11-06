@@ -15,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/ofertas")
+@RequestMapping("/api/ofertas")
 public class OfertaController {
 
     @Autowired
@@ -24,36 +24,30 @@ public class OfertaController {
     @Autowired
     private IOfertaRepository ofertaRepository;
 
-    @PreAuthorize("permitAll()")
-
-    //http://localhost:8080/ofertas
-    @GetMapping
-    public ResponseEntity<Page<OfertaSalida>> mostrarTodosPaginados (Pageable pageable){
+    @GetMapping("/listPage")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<Page<OfertaSalida>> mostrarTodosPaginados(Pageable pageable) {
         Page<OfertaSalida> ofertas = ofertaService.obtenerTodoPaginados(pageable);
 
-        if (ofertas.hasContent()){
-            return  ResponseEntity.ok(ofertas);
-        }
-            return ResponseEntity.notFound().build();
-    }
-
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/ofertas/listado
-    @GetMapping("/listado")
-    public ResponseEntity<List<OfertaSalida>> obtenerTodos(){
-        List<OfertaSalida> ofertas = ofertaService.obtenerTodos();
-        if (!ofertas.isEmpty()){
+        if (ofertas.hasContent()) {
             return ResponseEntity.ok(ofertas);
         }
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("permitAll()")
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/ofertas/save
-    //aqui se deben pasar los datos pero la fecha y estado lo crea en automatico
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<List<OfertaSalida>> obtenerTodos() {
+        List<OfertaSalida> ofertas = ofertaService.obtenerTodos();
+        if (!ofertas.isEmpty()) {
+            return ResponseEntity.ok(ofertas);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<OfertaSalida> crear (
+    @PreAuthorize("hasAuthority('usuario')")
+    public ResponseEntity<OfertaSalida> crear(
             @RequestParam("imagenes") List<MultipartFile> imagenes,
             @RequestPart("oferta") OfertaGuardar oferta) throws IOException {
 
@@ -62,47 +56,41 @@ public class OfertaController {
 
     }
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/ofertas/findById/0 <--aqui debe ir el id de la oferta que quieran buscar
-    @PreAuthorize("permitAll()")
     @GetMapping("/findById/{idOferta}")
-    public ResponseEntity<OfertaSalida> obtenerPorId (@PathVariable Long idOferta){
+    @PreAuthorize("hasAuthority('usuario')")
+    public ResponseEntity<OfertaSalida> obtenerPorId(@PathVariable Long idOferta) {
         OfertaSalida oferta = ofertaService.obtenerPorId(idOferta);
         if (oferta != null) {
             return ResponseEntity.ok(oferta);
         }
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/ofertas/edit/0 <-- aqui debe ir el id de la oferta que quieren editar
     @PutMapping("/edit/{idOferta}")
+    @PreAuthorize("hasAuthority('usuario')")
     public ResponseEntity<OfertaSalida> editar(
-          @PathVariable Long idOferta,
-          @RequestParam("imagenes") List<MultipartFile> imagenes,
-         @RequestPart("oferta") OfertaModificar ofertaModificar) throws IOException {
+            @PathVariable Long idOferta,
+            @RequestParam("imagenes") List<MultipartFile> imagenes,
+            @RequestPart("oferta") OfertaModificar ofertaModificar) throws IOException {
 
-     OfertaSalida salida = ofertaService.editar(idOferta, ofertaModificar, imagenes);
+        OfertaSalida salida = ofertaService.editar(idOferta, ofertaModificar, imagenes);
 
-     if (salida != null) {
-        return ResponseEntity.ok(salida);
-     }
-     return ResponseEntity.notFound().build();
-}
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    @PreAuthorize("permitAll()")
-    //http://localhost:8080/ofertas/busar/ xxxx <-- aqui debe ir el nombre de lo que quieren buscar
-    @GetMapping("/buscar/{titulo}")
+        if (salida != null) {
+            return ResponseEntity.ok(salida);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/findByTitle/{titulo}")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<List<OfertaSalida>> buscarPorTitulo(@PathVariable String titulo) {
         List<OfertaSalida> ofertas = ofertaService.buscarPorTitulo(titulo);
         return ResponseEntity.ok(ofertas);
     }
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-@PreAuthorize("permitAll()")
-    //http://localhost:8080/ofertas/delete/0 <--aqui debe ir el id de la oferta que se quiere borrar
     @DeleteMapping("/delete/{idOferta}")
-    public ResponseEntity delete(@PathVariable Long idOferta){
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity delete(@PathVariable Long idOferta) {
         ofertaService.eliminarPorId(idOferta);
         return ResponseEntity.ok("Oferta eliminada excitosamente");
     }

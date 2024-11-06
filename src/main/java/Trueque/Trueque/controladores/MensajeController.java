@@ -8,27 +8,28 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController()
-@RequestMapping("/mensajes")
+@RequestMapping("/api/mensajes")
 public class MensajeController {
 
     @Autowired
     private IMensajeService mensajeService;
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    @PostMapping("/enviar")
+    @PostMapping("/sendMenssage")
+    @PreAuthorize("hasAuthority('usuario')")
     public MensajeSalida guardarMensaje(@RequestBody MensajeGuardar mensajeGuardarDTO) {
         return mensajeService.guardarMensaje(mensajeGuardarDTO);
     }
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    @GetMapping("/oferta/{idOferta}")
+    @GetMapping("/findByOfert/{idOferta}")
+    @PreAuthorize("hasAuthority('usuario')")
     public List<MensajeSalida> obtenerMensajesPorOferta(@PathVariable Long idOferta) {
         return mensajeService.obtenerMensajesPorOferta(idOferta);
     }
 
-//    @PreAuthorize("hasAnyRole('admin', 'usuario')")
     @GetMapping("/chat")
+    @PreAuthorize("hasAuthority('usuario')")
     public List<MensajeSalida> obtenerMensajesEntreUsuarios(
             @RequestParam Long idOferta,
             @RequestParam Long idRemitente,

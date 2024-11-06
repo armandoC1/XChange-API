@@ -25,7 +25,7 @@ public class JwtService {
 
     public String getToken(Usuario usuario) {
         List<String> roles = new ArrayList<>();
-        roles.add("ROLE_" + usuario.getRol().getNombre().toUpperCase());
+        roles.add(usuario.getRol().getNombre()); //AQUI SE MODIFICA EL NOMBRE DEL TOKEN
         HashMap<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("roles", roles);
         return  generarToken(extraClaims, usuario);

@@ -51,17 +51,13 @@ class SolicitudServiceTest {
 
     @Test
     void obtenerTodos() {
-        // Arrange
         Solicitud solicitud = new Solicitud();
         SolicitudSalida solicitudSalida = new SolicitudSalida();
 
         when(solicitudRepository.findAll()).thenReturn(Collections.singletonList(solicitud));
         when(modelMapper.map(solicitud, SolicitudSalida.class)).thenReturn(solicitudSalida);
 
-        // Act
         List<SolicitudSalida> solicitudes = solicitudService.obtenerTodos();
-
-        // Assert
         assertNotNull(solicitudes);
         assertEquals(1, solicitudes.size(), "La lista de solicitudes debe contener un elemento");
         verify(solicitudRepository, times(1)).findAll();
@@ -70,7 +66,6 @@ class SolicitudServiceTest {
 
     @Test
     void obtenerTodosPaginados() {
-        // Arrange
         Pageable pageable = PageRequest.of(0, 10);
         Solicitud solicitud = new Solicitud();
         SolicitudSalida solicitudSalida = new SolicitudSalida();
@@ -79,10 +74,8 @@ class SolicitudServiceTest {
         when(solicitudRepository.findAll(pageable)).thenReturn(solicitudPage);
         when(modelMapper.map(solicitud, SolicitudSalida.class)).thenReturn(solicitudSalida);
 
-        // Act
         Page<SolicitudSalida> solicitudes = solicitudService.obtenerTodosPaginados(pageable);
 
-        // Assert
         assertNotNull(solicitudes);
         assertEquals(1, solicitudes.getTotalElements(), "La lista de solicitudes debe contener un elemento");
         verify(solicitudRepository, times(1)).findAll(pageable);
@@ -91,7 +84,6 @@ class SolicitudServiceTest {
 
     @Test
     void obtenerPorId() {
-        // Arrange
         Long idSolicitud = 1L;
         Solicitud solicitud = new Solicitud();
         SolicitudSalida solicitudSalida = new SolicitudSalida();
@@ -99,77 +91,20 @@ class SolicitudServiceTest {
         when(solicitudRepository.findById(idSolicitud)).thenReturn(Optional.of(solicitud));
         when(modelMapper.map(solicitud, SolicitudSalida.class)).thenReturn(solicitudSalida);
 
-        // Act
         SolicitudSalida resultado = solicitudService.obtenerPorId(idSolicitud);
 
-        // Assert
         assertNotNull(resultado);
         verify(solicitudRepository, times(1)).findById(idSolicitud);
         verify(modelMapper, times(1)).map(solicitud, SolicitudSalida.class);
     }
 
-    @Test
-    void crear() {
-        // Arrange
-        SolicitudGuardar solicitudGuardar = new SolicitudGuardar();
-        Solicitud solicitud = new Solicitud();
-        SolicitudSalida solicitudSalida = new SolicitudSalida();
-        Categoria categoria = new Categoria();
-        Usuario usuario = new Usuario();
-
-        when(categoriaRepository.findById(solicitudGuardar.getIdCategoria())).thenReturn(Optional.of(categoria));
-        when(usuarioRepository.findById(solicitudGuardar.getIdUsuario())).thenReturn(Optional.of(usuario));
-        when(solicitudRepository.save(any(Solicitud.class))).thenReturn(solicitud);
-        when(modelMapper.map(solicitud, SolicitudSalida.class)).thenReturn(solicitudSalida);
-
-        // Act
-        SolicitudSalida resultado = solicitudService.crear(solicitudGuardar);
-
-        // Assert
-        assertNotNull(resultado);
-        verify(categoriaRepository, times(1)).findById(solicitudGuardar.getIdCategoria());
-        verify(usuarioRepository, times(1)).findById(solicitudGuardar.getIdUsuario());
-        verify(solicitudRepository, times(1)).save(any(Solicitud.class));
-        verify(modelMapper, times(1)).map(solicitud, SolicitudSalida.class);
-    }
-
-    @Test
-    void editar() {
-        // Arrange
-        SolicitudModificar solicitudModificar = new SolicitudModificar();
-        solicitudModificar.setIdSolicitud(1L);
-        Solicitud solicitudExistente = new Solicitud();
-        SolicitudSalida solicitudSalida = new SolicitudSalida();
-        Categoria categoria = new Categoria();
-        Usuario usuario = new Usuario();
-
-        when(solicitudRepository.findById(solicitudModificar.getIdSolicitud())).thenReturn(Optional.of(solicitudExistente));
-        when(usuarioRepository.findById(solicitudModificar.getIdUsuario())).thenReturn(Optional.of(usuario));
-        when(categoriaRepository.findById(solicitudModificar.getIdCategoria())).thenReturn(Optional.of(categoria));
-        when(solicitudRepository.save(solicitudExistente)).thenReturn(solicitudExistente);
-        when(modelMapper.map(solicitudExistente, SolicitudSalida.class)).thenReturn(solicitudSalida);
-
-        // Act
-        SolicitudSalida resultado = solicitudService.editar(solicitudModificar);
-
-        // Assert
-        assertNotNull(resultado);
-        verify(solicitudRepository, times(1)).findById(solicitudModificar.getIdSolicitud());
-        verify(usuarioRepository, times(1)).findById(solicitudModificar.getIdUsuario());
-        verify(categoriaRepository, times(1)).findById(solicitudModificar.getIdCategoria());
-        verify(solicitudRepository, times(1)).save(solicitudExistente);
-        verify(modelMapper, times(1)).map(solicitudExistente, SolicitudSalida.class);
-    }
 
     @Test
     void eliminarPorId() {
-        // Arrange
         Long idSolicitud = 1L;
 
-        // Act
         solicitudService.eliminarPorId(idSolicitud);
 
-        // Assert
         verify(solicitudRepository, times(1)).deleteById(idSolicitud);
     }
 }

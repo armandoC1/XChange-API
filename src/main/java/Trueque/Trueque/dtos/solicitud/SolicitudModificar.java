@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,8 @@ public class SolicitudModificar implements Serializable {
     private String descripcion;
 
     private String ubicacion;
+
+    private List<byte[]> imagenes;
 
     private String estado;
 

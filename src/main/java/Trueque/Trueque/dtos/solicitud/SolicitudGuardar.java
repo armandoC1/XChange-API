@@ -3,6 +3,7 @@ package Trueque.Trueque.dtos.solicitud;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +16,8 @@ public class SolicitudGuardar implements Serializable {
     private String descripcion;
 
     private String ubicacion;
+
+    private List<byte[]> imagenes;
 
     private Long idUsuario;
 

@@ -40,7 +40,6 @@ class CoincidenciaServiceTest {
 
     @AfterEach
     void tearDown() {
-        // Aquí podrías limpiar recursos si fuera necesario, pero con mocks usualmente no es necesario.
     }
 
     //test passed
@@ -63,7 +62,6 @@ class CoincidenciaServiceTest {
         verify(coincidenciaRepository, times(1)).save(any(Coincidencia.class));
     }
 
-    //test passed
     @Test
     void crearCoincidencia_OfertaNoEncontrada() {
 
@@ -78,7 +76,6 @@ class CoincidenciaServiceTest {
         assertEquals("Oferta no encontrada con ID: " + idOferta, exception.getMessage());
     }
 
-    //test passed
     @Test
     void crearCoincidencia_SolicitudNoEncontrada() {
         Long idOferta = 1L;
@@ -94,7 +91,6 @@ class CoincidenciaServiceTest {
         assertEquals("Solicitud no encontrada con ID: " + idSolicitud, exception.getMessage());
     }
 
-    //test passed
     @Test
     void obtenerCoincidenciaPorId() {
 
@@ -108,7 +104,6 @@ class CoincidenciaServiceTest {
         assertNotNull(resultado, "La coincidencia obtenida no debe ser nula");
     }
 
-    //test passed
     @Test
     void obtenerCoincidenciaPorId_NoEncontrada() {
         Long idCoincidencia = 1L;

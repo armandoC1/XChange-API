@@ -46,7 +46,6 @@ class MensajeServiceTest {
 
     @Test
     void guardarMensaje() {
-        // Arrange
         MensajeGuardar mensajeGuardarDTO = new MensajeGuardar();
         mensajeGuardarDTO.setIdOferta(1L);
         mensajeGuardarDTO.setIdRemitente(2L);
@@ -65,10 +64,8 @@ class MensajeServiceTest {
         when(mensajeRepository.save(any(Mensaje.class))).thenReturn(mensaje);
         when(modelMapper.map(mensaje, MensajeSalida.class)).thenReturn(mensajeSalida);
 
-        // Act
         MensajeSalida resultado = mensajeService.guardarMensaje(mensajeGuardarDTO);
 
-        // Assert
         assertNotNull(resultado, "El mensaje guardado no debe ser nulo");
         verify(ofertaRepository, times(1)).findById(1L);
         verify(usuarioRepository, times(1)).findById(2L);
@@ -79,7 +76,6 @@ class MensajeServiceTest {
 
     @Test
     void obtenerMensajesPorOferta() {
-        // Arrange
         Long idOferta = 1L;
         Mensaje mensaje = new Mensaje();
         MensajeSalida mensajeSalida = new MensajeSalida();
@@ -87,10 +83,8 @@ class MensajeServiceTest {
         when(mensajeRepository.findByOfertaIdOferta(idOferta)).thenReturn(Collections.singletonList(mensaje));
         when(modelMapper.map(mensaje, MensajeSalida.class)).thenReturn(mensajeSalida);
 
-        // Act
         List<MensajeSalida> mensajes = mensajeService.obtenerMensajesPorOferta(idOferta);
 
-        // Assert
         assertNotNull(mensajes, "La lista de mensajes no debe ser nula");
         assertEquals(1, mensajes.size(), "La lista de mensajes debe tener un elemento");
         verify(mensajeRepository, times(1)).findByOfertaIdOferta(idOferta);
@@ -99,7 +93,6 @@ class MensajeServiceTest {
 
     @Test
     void obtenerMensajesEntreUsuarios() {
-        // Arrange
         Long idOferta = 1L;
         Long idRemitente = 2L;
         Long idDestinatario = 3L;
@@ -110,10 +103,8 @@ class MensajeServiceTest {
                 .thenReturn(Collections.singletonList(mensaje));
         when(modelMapper.map(mensaje, MensajeSalida.class)).thenReturn(mensajeSalida);
 
-        // Act
         List<MensajeSalida> mensajes = mensajeService.obtenerMensajesEntreUsuarios(idOferta, idRemitente, idDestinatario);
 
-        // Assert
         assertNotNull(mensajes, "La lista de mensajes no debe ser nula");
         assertEquals(1, mensajes.size(), "La lista de mensajes debe tener un elemento");
         verify(mensajeRepository, times(1)).findByOfertaIdOfertaAndRemitenteIdUsuarioAndDestinatarioIdUsuario(idOferta, idRemitente, idDestinatario);

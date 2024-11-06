@@ -3,89 +3,84 @@ package Trueque.Trueque.controladores;
 import Trueque.Trueque.dtos.solicitud.SolicitudGuardar;
 import Trueque.Trueque.dtos.solicitud.SolicitudModificar;
 import Trueque.Trueque.dtos.solicitud.SolicitudSalida;
-import Trueque.Trueque.repositorios.ISolicitudRepository;
 import Trueque.Trueque.servicios.interfaces.ISolicitudServe;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.net.SocketImpl;
+import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/solicitudes")
+@RequestMapping("/api/solicitudes")
 public class SolicitudController {
 
     @Autowired
     private ISolicitudServe solicitudServe;
 
-    @Autowired
-    private ISolicitudRepository solicitudRepository;
-
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes
-    @GetMapping
+    @GetMapping("/listPage")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<Page<SolicitudSalida>> mostrarTodosPaginados(Pageable pageable) {
         Page<SolicitudSalida> solicitudes = solicitudServe.obtenerTodosPaginados(pageable);
-
-        if(solicitudes.hasContent()){
+        if (solicitudes.hasContent()) {
             return ResponseEntity.ok(solicitudes);
         }
-            return ResponseEntity.notFound().build();
-
+        return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes/listado
-    @GetMapping("/listado")
-    public ResponseEntity<List<SolicitudSalida>> mostrarTodos(){
-        List<SolicitudSalida> solicitud = solicitudServe.obtenerTodos();
-
-        if (solicitud.isEmpty()){
-            return ResponseEntity.notFound().build();
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<List<SolicitudSalida>> obtenerTodos() {
+        List<SolicitudSalida> solicitudes = solicitudServe.obtenerTodos();
+        if (!solicitudes.isEmpty()) {
+            return ResponseEntity.ok(solicitudes);
         }
-            return ResponseEntity.ok(solicitud);
+        return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes/save
     @PostMapping("/save")
-    public ResponseEntity<SolicitudSalida> crear (@RequestBody SolicitudGuardar solicitudGuardar){
-        SolicitudSalida solicitudSalida = solicitudServe.crear(solicitudGuardar);
+    @PreAuthorize("hasAuthority('usuario')")
+    public ResponseEntity<SolicitudSalida> crear(
+            @RequestParam("imagenes") List<MultipartFile> imagenes,
+            @RequestPart("solicitud") SolicitudGuardar solicitudGuardar) throws IOException {
+
+        SolicitudSalida solicitudSalida = solicitudServe.crear(solicitudGuardar, imagenes);
         return ResponseEntity.ok(solicitudSalida);
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes/findById/0 <-- aqui debe ir el id
-    @GetMapping("/findbyId/{idSolicitud}")
-    public ResponseEntity<SolicitudSalida> obtenerPorId (@PathVariable Long idSolicitud, @RequestBody SolicitudModificar solicitudModificar){
-        SolicitudSalida solicitudSalida = solicitudServe.obtenerPorId(idSolicitud);
-
-        if (solicitudSalida != null){
-            return ResponseEntity.ok(solicitudSalida);
-        }
-            return ResponseEntity.notFound().build();
-    }
-
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes/edit/0 <-- aqui debe ir el id la solicitud que queiren modoifcar
     @PutMapping("/edit/{idSolicitud}")
-    public ResponseEntity<SolicitudSalida> editar (@PathVariable Long idSolicitud, @RequestBody SolicitudModificar solicitudModificar){
-        SolicitudSalida solicitudSalida = solicitudServe.editar(solicitudModificar);
-        if (solicitudSalida != null){
-            return ResponseEntity.ok(solicitudSalida);
+    @PreAuthorize("hasAuthority('usuario')")
+    public ResponseEntity<SolicitudSalida> editar(
+            @PathVariable Long idSolicitud,
+            @RequestParam("imagenes") List<MultipartFile> imagenes,
+            @RequestPart("solicitud") SolicitudModificar solicitudModificar) throws IOException {
+
+        SolicitudSalida salida = solicitudServe.editar(idSolicitud, solicitudModificar, imagenes);
+        if (salida != null) {
+            return ResponseEntity.ok(salida);
         }
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("hasAnyRole('admin', 'usuario')")
-    //http://localhost:8080/solicitudes/delete/0 <-- aqui va el id del registro que quieran borrar
+    @GetMapping("/findById/{idSolicitud}")
+    @PreAuthorize("hasAuthority('usuario')")
+    public ResponseEntity<SolicitudSalida> obtenerPorId(@PathVariable Long idSolicitud) {
+        SolicitudSalida solicitud = solicitudServe.obtenerPorId(idSolicitud);
+        if (solicitud != null) {
+            return ResponseEntity.ok(solicitud);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/delete/{idSolicitud}")
-    public ResponseEntity delete ( @PathVariable Long idSolicitud){
-            solicitudServe.eliminarPorId(idSolicitud);
-            return ResponseEntity.ok("Solicitud eliminada exitosamente");
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<String> delete(@PathVariable Long idSolicitud) {
+        solicitudServe.eliminarPorId(idSolicitud);
+        return ResponseEntity.ok("Solicitud eliminada exitosamente");
     }
-
 }

@@ -17,14 +17,14 @@ import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioToken> login(@RequestBody UsuarioLogin loginRequest){
+    public ResponseEntity<UsuarioToken> login(@RequestBody UsuarioLogin loginRequest) {
         System.out.println("JSON recibido: " + loginRequest);
         System.out.println("Correo: " + loginRequest.getCorreo());
         System.out.println("Contraseña: " + loginRequest.getContrasena());
@@ -36,8 +36,8 @@ public class UsuarioController {
             @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             @RequestPart("usuario") UsuarioRegistrar registroRequest) throws IOException {
 
-        System.out.println("Cuerpo del json: "+ registroRequest);
-        System.out.println("imagen: "+ fotoPerfil);
+        System.out.println("Cuerpo del json: " + registroRequest);
+        System.out.println("imagen: " + fotoPerfil);
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             registroRequest.setFotoPerfil(fotoPerfil.getBytes());
         }
@@ -45,28 +45,28 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.registro(registroRequest));
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/listado")
-    public ResponseEntity<List<UsuarioSalida>> mostrarTodos(){
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<List<UsuarioSalida>> mostrarTodos() {
         List<UsuarioSalida> usuarios = usuarioService.obtenerTodos();
-        if (!usuarios.isEmpty()){
+        if (!usuarios.isEmpty()) {
             return ResponseEntity.ok(usuarios);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/find/{idUsuario}")
-    public ResponseEntity<UsuarioSalida> buscarPorId (@PathVariable Long idUsuario){
+    @GetMapping("/findbyID/{idUsuario}")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<UsuarioSalida> buscarPorId(@PathVariable Long idUsuario) {
         UsuarioSalida salida = usuarioService.obtenenerPorId(idUsuario);
-        if (salida != null){
+        if (salida != null) {
             return ResponseEntity.ok(salida);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PreAuthorize("permitAll()")
     @PutMapping("/edit/{idUsuario}")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<UsuarioSalida> editar(
             @PathVariable Long idUsuario,
             @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
@@ -78,7 +78,7 @@ public class UsuarioController {
             usuarioModificar.setFotoPerfil(fotoPerfil.getBytes());
         }
 
-        UsuarioSalida usuarioEditado = usuarioService.editar(idUsuario,usuarioModificar);
+        UsuarioSalida usuarioEditado = usuarioService.editar(idUsuario, usuarioModificar);
 
         return ResponseEntity.ok(usuarioEditado);
     }

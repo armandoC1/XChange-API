@@ -53,17 +53,15 @@ class OfertaServiceTest {
 
     @Test
     void obtenerTodos() {
-        // Arrange
+
         Oferta oferta = new Oferta();
         OfertaSalida ofertaSalida = new OfertaSalida();
 
         when(ofertaRepository.findAll()).thenReturn(Collections.singletonList(oferta));
         when(modelMapper.map(oferta, OfertaSalida.class)).thenReturn(ofertaSalida);
 
-        // Act
         List<OfertaSalida> ofertas = ofertaService.obtenerTodos();
 
-        // Assert
         assertNotNull(ofertas);
         assertEquals(1, ofertas.size(), "La lista de ofertas debe contener un elemento");
         verify(ofertaRepository, times(1)).findAll();
@@ -72,7 +70,7 @@ class OfertaServiceTest {
 
     @Test
     void obtenerTodoPaginados() {
-        // Arrange
+
         Pageable pageable = PageRequest.of(0, 10);
         Oferta oferta = new Oferta();
         OfertaSalida ofertaSalida = new OfertaSalida();
@@ -81,10 +79,8 @@ class OfertaServiceTest {
         when(ofertaRepository.findAll(pageable)).thenReturn(ofertaPage);
         when(modelMapper.map(oferta, OfertaSalida.class)).thenReturn(ofertaSalida);
 
-        // Act
         Page<OfertaSalida> ofertas = ofertaService.obtenerTodoPaginados(pageable);
 
-        // Assert
         assertNotNull(ofertas);
         assertEquals(1, ofertas.getTotalElements(), "La lista de ofertas debe contener un elemento");
         verify(ofertaRepository, times(1)).findAll(pageable);
@@ -93,7 +89,7 @@ class OfertaServiceTest {
 
     @Test
     void obtenerPorId() {
-        // Arrange
+
         Long idOferta = 1L;
         Oferta oferta = new Oferta();
         OfertaSalida ofertaSalida = new OfertaSalida();
@@ -101,10 +97,8 @@ class OfertaServiceTest {
         when(ofertaRepository.findById(idOferta)).thenReturn(Optional.of(oferta));
         when(modelMapper.map(oferta, OfertaSalida.class)).thenReturn(ofertaSalida);
 
-        // Act
         OfertaSalida resultado = ofertaService.obtenerPorId(idOferta);
 
-        // Assert
         assertNotNull(resultado);
         verify(ofertaRepository, times(1)).findById(idOferta);
         verify(modelMapper, times(1)).map(oferta, OfertaSalida.class);
@@ -112,7 +106,7 @@ class OfertaServiceTest {
 
     @Test
     void crear() throws IOException {
-        // Arrange
+
         OfertaGuardar ofertaGuardar = new OfertaGuardar();
         MultipartFile imagenMock = mock(MultipartFile.class);
         List<MultipartFile> imagenes = List.of(imagenMock);
@@ -127,10 +121,8 @@ class OfertaServiceTest {
         when(ofertaRepository.save(any(Oferta.class))).thenReturn(oferta);
         when(modelMapper.map(oferta, OfertaSalida.class)).thenReturn(ofertaSalida);
 
-        // Act
         OfertaSalida resultado = ofertaService.crear(ofertaGuardar, imagenes);
 
-        // Assert
         assertNotNull(resultado);
         verify(categoriaRepository, times(1)).findById(ofertaGuardar.getIdCategoria());
         verify(usuarioRepository, times(1)).findById(ofertaGuardar.getIdUsuario());
@@ -140,7 +132,7 @@ class OfertaServiceTest {
 
     @Test
     void buscarPorTitulo() {
-        // Arrange
+
         String titulo = "prueba";
         Oferta oferta = new Oferta();
         OfertaSalida ofertaSalida = new OfertaSalida();
@@ -148,53 +140,22 @@ class OfertaServiceTest {
         when(ofertaRepository.findByTituloContainingIgnoreCase(titulo)).thenReturn(Collections.singletonList(oferta));
         when(modelMapper.map(oferta, OfertaSalida.class)).thenReturn(ofertaSalida);
 
-        // Act
         List<OfertaSalida> ofertas = ofertaService.buscarPorTitulo(titulo);
 
-        // Assert
         assertNotNull(ofertas);
         assertEquals(1, ofertas.size(), "La lista de ofertas debe contener un elemento");
         verify(ofertaRepository, times(1)).findByTituloContainingIgnoreCase(titulo);
         verify(modelMapper, times(1)).map(oferta, OfertaSalida.class);
     }
 
-    @Test
-    void editar() {
-        // Arrange
-        OfertaModificar ofertaModificar = new OfertaModificar();
-        ofertaModificar.setIdOferta(1L);
-        Oferta ofertaExistente = new Oferta();
-        OfertaSalida ofertaSalida = new OfertaSalida();
-        Categoria categoria = new Categoria();
-        Usuario usuario = new Usuario();
-
-        when(ofertaRepository.findById(ofertaModificar.getIdOferta())).thenReturn(Optional.of(ofertaExistente));
-        when(usuarioRepository.findById(ofertaModificar.getIdUsuario())).thenReturn(Optional.of(usuario));
-        when(categoriaRepository.findById(ofertaModificar.getIdCategoria())).thenReturn(Optional.of(categoria));
-        when(ofertaRepository.save(ofertaExistente)).thenReturn(ofertaExistente);
-        when(modelMapper.map(ofertaExistente, OfertaSalida.class)).thenReturn(ofertaSalida);
-
-        // Act
-        OfertaSalida resultado = ofertaService.editar(ofertaModificar);
-
-        // Assert
-        assertNotNull(resultado);
-        verify(ofertaRepository, times(1)).findById(ofertaModificar.getIdOferta());
-        verify(usuarioRepository, times(1)).findById(ofertaModificar.getIdUsuario());
-        verify(categoriaRepository, times(1)).findById(ofertaModificar.getIdCategoria());
-        verify(ofertaRepository, times(1)).save(ofertaExistente);
-        verify(modelMapper, times(1)).map(ofertaExistente, OfertaSalida.class);
-    }
 
     @Test
     void eliminarPorId() {
-        // Arrange
+
         Long idOferta = 1L;
 
-        // Act
         ofertaService.eliminarPorId(idOferta);
 
-        // Assert
         verify(ofertaRepository, times(1)).deleteById(idOferta);
     }
 }

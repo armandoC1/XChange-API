@@ -36,18 +36,14 @@ class IntercambioServiceTest {
 
     @Test
     void obtenerTodos() {
-        // Arrange
         Intercambio intercambio = new Intercambio();
         when(intercambioRepository.findAll()).thenReturn(Collections.singletonList(intercambio));
 
-        // Act
         List<IntercambioSalida> intercambios = intercambioService.obtenerTodos();
 
-        // Assert
         assertNotNull(intercambios, "La lista de intercambios no debe ser nula");
         assertEquals(1, intercambios.size(), "La lista de intercambios debe tener un elemento");
 
-        // Verifica que se haya llamado al método findAll del repositorio una vez
         verify(intercambioRepository, times(1)).findAll();
     }
 
