@@ -10,7 +10,7 @@ import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/intercambios")
+@RequestMapping("/intercambios")
 public class IntercambioController {
 
     private IntercambioService intercambioService;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/coincidencia")
+@RequestMapping("/coincidencia")
 public class CoincidenciaController {
 
     @Autowired

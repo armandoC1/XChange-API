@@ -10,7 +10,7 @@ import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController()
-@RequestMapping("/api/mensajes")
+@RequestMapping("/mensajes")
 public class MensajeController {
 
     @Autowired
