@@ -43,8 +43,10 @@ public class UsuarioService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(correoRequest.getCorreo(),
                 correoRequest.getContrasena()));
         Usuario usuario = userRepository.findByCorreo(correoRequest.getCorreo()).orElseThrow();
+        Long idUsuario = usuario.getIdUsuario();
         String token = jwtService.getToken(usuario);
         return UsuarioToken.builder()
+                .idUsuario(idUsuario)
                 .token(token)
                 .build();
     }

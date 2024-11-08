@@ -24,10 +24,8 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioToken> login(@RequestBody UsuarioLogin loginRequest) {
-        System.out.println("JSON recibido: " + loginRequest);
-        System.out.println("Correo: " + loginRequest.getCorreo());
-        System.out.println("Contraseña: " + loginRequest.getContrasena());
+    public ResponseEntity<UsuarioToken> login
+            (@RequestBody UsuarioLogin loginRequest) {
         return ResponseEntity.ok(usuarioService.login(loginRequest));
     }
 
@@ -36,8 +34,6 @@ public class UsuarioController {
             @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil,
             @RequestPart("usuario") UsuarioRegistrar registroRequest) throws IOException {
 
-        System.out.println("Cuerpo del json: " + registroRequest);
-        System.out.println("imagen: " + fotoPerfil);
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
             registroRequest.setFotoPerfil(fotoPerfil.getBytes());
         }
@@ -55,7 +51,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/findbyID/{idUsuario}")
+    @GetMapping("/findById/{idUsuario}")
     @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<UsuarioSalida> buscarPorId(@PathVariable Long idUsuario) {
         UsuarioSalida salida = usuarioService.obtenenerPorId(idUsuario);

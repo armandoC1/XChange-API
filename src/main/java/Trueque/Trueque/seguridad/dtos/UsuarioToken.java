@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UsuarioToken {
+    private Long idUsuario;
     private String token;
 }
