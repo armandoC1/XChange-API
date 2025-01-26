@@ -4,14 +4,15 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class OfertaModificar implements Serializable{
-
-    private Long idOferta;
+//
+//    private Long idOferta;
 
     private String titulo;
 
@@ -21,7 +22,7 @@ public class OfertaModificar implements Serializable{
 
     private String ubicacion;
 
-    private byte[] imagenes;
+    private List<byte[]> imagenes;
 
     private String estado;
 

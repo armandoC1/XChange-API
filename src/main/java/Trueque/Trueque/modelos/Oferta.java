@@ -39,7 +39,6 @@ public class Oferta {
     @Column(name = "estado")
     private String estado;
 
-    //relaciones entra tablas
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
@@ -56,7 +55,7 @@ public class Oferta {
 
     @PrePersist
     protected void onCreate(){
-        this.fechaCreacion = LocalDateTime.now();
+        this.fechaCreacion = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
         this.estado = "activa";
     }
 

@@ -11,21 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SolicitudSalida implements Serializable {
-
+    private Long idSolicitud;
     private String titulo;
-
     private String descripcion;
-
     private String ubicacion;
-
     private LocalDateTime fechaCreacion;
-
     private List<byte[]> imagenes;
-
     private String estado;
-
     private Long idCategoria;
-
-    private Long idUsuario;
-
+    private Long idSolicitante;
+    private Long idDestinatario;
 }

@@ -31,7 +31,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://xchanges.store"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://xchangesv.es", "https://api.xchangesv.es",  "https://api.xchangesv.es:8080", "http://xchangesv.es", "http://api.xchangesv.es",  "http://api.xchangesv.es:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

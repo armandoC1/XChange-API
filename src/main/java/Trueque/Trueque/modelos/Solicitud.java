@@ -3,8 +3,9 @@ package Trueque.Trueque.modelos;
 import jakarta.persistence.*;
 import lombok.*;
 import Trueque.Trueque.seguridad.modelos.Usuario;
-
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -31,15 +32,19 @@ public class Solicitud {
     @Column(name = "imagen", columnDefinition = "LONGBLOB")
     private List<byte[]> imagenes;
 
-    @Column(name = "fecha_creaciom")
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
     @Column(name = "estado")
     private String estado;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "id_solicitante", nullable = false)
+    private Usuario solicitante;
+
+    @ManyToOne
+    @JoinColumn(name = "id_destinatario", nullable = false)
+    private Usuario destinatario;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)
@@ -53,8 +58,7 @@ public class Solicitud {
 
     @PrePersist
     protected void onCreate() {
-        this.fechaCreacion = LocalDateTime.now();
+        this.fechaCreacion = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
         this.estado = "activo";
     }
-
 }

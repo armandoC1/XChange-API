@@ -8,7 +8,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/intercambios")
 public class IntercambioController {
@@ -36,13 +44,13 @@ public class IntercambioController {
     }
 
     @GetMapping("/findById/{id}")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public IntercambioSalida obtenerPorId(@PathVariable("id") Long id) {
         return intercambioService.obtenerPorId(id);
     }
 
     @PostMapping("/confirm")
-    @PreAuthorize(" hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public IntercambioSalida confirmarIntercambio(@RequestBody IntercambioGuardar intercambioGuardar) {
         return intercambioService.crear(intercambioGuardar);
     }

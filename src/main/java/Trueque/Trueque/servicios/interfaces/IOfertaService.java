@@ -13,16 +13,17 @@ public interface IOfertaService {
 
     Page<OfertaSalida> obtenerTodoPaginados(Pageable pageable);
 
-    OfertaSalida obtenerPorId (Long idOferta);
+    OfertaSalida obtenerPorId(Long idOferta);
 
-    OfertaSalida crear (OfertaGuardar ofertaGuardar,  List<MultipartFile> imagenes) throws IOException; //revisar posible error
+    OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> imagenes) throws IOException; //revisar posible error
 
     List<OfertaSalida> buscarPorTitulo(String titulo);
 
     OfertaSalida editar(Long idOferta, OfertaModificar ofertaModificar, List<MultipartFile> imagenes) throws IOException;
 
-    void eliminarPorId (Long idOferta);
+    void eliminarPorId(Long idOferta);
 
+    List<OfertaSalida> obtenerOfertasPorUsuario(Long userId);
 
 
 }

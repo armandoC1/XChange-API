@@ -121,6 +121,7 @@ public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> image
         ofertaExistente.setDescripcion(ofertaModificar.getDescripcion());
         ofertaExistente.setCondicion(ofertaModificar.getCondicion());
         ofertaExistente.setUbicacion(ofertaModificar.getUbicacion());
+        ofertaExistente.setEstado(ofertaModificar.getEstado());
 
         if (imagenes != null && !imagenes.isEmpty()) {
             List<byte[]> imagenesBytes = imagenes.stream()
@@ -151,5 +152,13 @@ public OfertaSalida crear(OfertaGuardar ofertaGuardar, List<MultipartFile> image
     @Override
     public void eliminarPorId(Long idOferta) {
         ofertaRepository.deleteById(idOferta);
+    }
+
+    @Override
+    public List<OfertaSalida> obtenerOfertasPorUsuario(Long userId) {
+        List<Oferta> ofertas = ofertaRepository.findOfertasByUsuarioId(userId);
+        return ofertas.stream()
+                .map(oferta -> modelMapper.map(oferta, OfertaSalida.class))
+                .collect(Collectors.toList());
     }
 }

@@ -1,9 +1,12 @@
 package Trueque.Trueque.modelos;
+
 import Trueque.Trueque.seguridad.modelos.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -42,6 +45,6 @@ public class Intercambio {
     @PrePersist
     protected void onCreate(){
         this.estado = "completado";
-        this.fechaCompletado = LocalDateTime.now();
+        this.fechaCompletado = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
     }
 }

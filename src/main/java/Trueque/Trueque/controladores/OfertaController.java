@@ -13,7 +13,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/ofertas")
 public class OfertaController {
@@ -46,18 +54,24 @@ public class OfertaController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<OfertaSalida> crear(
             @RequestParam("imagenes") List<MultipartFile> imagenes,
             @RequestPart("oferta") OfertaGuardar oferta) throws IOException {
+        System.out.println("imagenes: "+ imagenes);
 
         OfertaSalida ofertaSalida = ofertaService.crear(oferta, imagenes);
         return ResponseEntity.ok(ofertaSalida);
+    }
 
+    @GetMapping("/misOfertas")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public List<OfertaSalida> obtenerMisOfertas(@RequestParam Long userId) {
+        return ofertaService.obtenerOfertasPorUsuario(userId);
     }
 
     @GetMapping("/findById/{idOferta}")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<OfertaSalida> obtenerPorId(@PathVariable Long idOferta) {
         OfertaSalida oferta = ofertaService.obtenerPorId(idOferta);
         if (oferta != null) {
@@ -67,7 +81,7 @@ public class OfertaController {
     }
 
     @PutMapping("/edit/{idOferta}")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<OfertaSalida> editar(
             @PathVariable Long idOferta,
             @RequestParam("imagenes") List<MultipartFile> imagenes,

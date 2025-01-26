@@ -64,8 +64,13 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario")
     private List<Oferta> ofertas;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Solicitud> solicitudes;
+    // Lista de solicitudes donde el usuario es el solicitante
+    @OneToMany(mappedBy = "solicitante")
+    private List<Solicitud> solicitudesSolicitadas;
+
+    // Lista de solicitudes donde el usuario es el destinatario
+    @OneToMany(mappedBy = "destinatario")
+    private List<Solicitud> solicitudesRecibidas;
 
     @OneToMany(mappedBy = "usuarioOfertante")
     private List<Intercambio> intercambiosOfertas;

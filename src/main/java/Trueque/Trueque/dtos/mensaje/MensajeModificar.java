@@ -10,6 +10,5 @@ import lombok.*;
 public class MensajeModificar implements Serializable {
 
     private Long id;
-
     private String contenidoMensaje;
 }

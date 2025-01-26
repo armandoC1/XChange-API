@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -36,7 +38,7 @@ public class Coincidencia {
 
     @PrePersist
     protected void onCreate(){
-        this.fechaCoincidencia = LocalDateTime.now();
+        this.fechaCoincidencia = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
         this.estado = "pendiente";
     }
 

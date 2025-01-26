@@ -12,14 +12,10 @@ import java.util.List;
 public class SolicitudGuardar implements Serializable {
 
     private String titulo;
-
     private String descripcion;
-
     private String ubicacion;
-
     private List<byte[]> imagenes;
-
-    private Long idUsuario;
-
+    private Long idSolicitante;
+    private Long idDestinatario;
     private Long idCategoria;
 }

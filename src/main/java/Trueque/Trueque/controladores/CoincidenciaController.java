@@ -6,7 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/coincidencia")
 public class CoincidenciaController {
@@ -15,7 +23,7 @@ public class CoincidenciaController {
     private CoincidenciaService coincidenciaService;
 
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public Coincidencia crearCoincidencia(@RequestParam Long idOferta, @RequestParam Long idSolicitud) {
         return coincidenciaService.crearCoincidencia(idOferta, idSolicitud);
     }

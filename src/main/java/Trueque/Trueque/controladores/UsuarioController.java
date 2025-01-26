@@ -15,7 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {

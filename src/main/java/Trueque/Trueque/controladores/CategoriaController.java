@@ -10,7 +10,15 @@ import Trueque.Trueque.servicios.interfaces.ICategoriaService;
 
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
@@ -28,7 +36,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<List<CategoriaSalida>> mostrarTodos() {
         List<CategoriaSalida> caegorias = categoriaService.obtenerTodos();
         if (!caegorias.isEmpty()) {

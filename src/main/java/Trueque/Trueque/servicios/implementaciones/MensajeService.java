@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,17 +34,14 @@ public class MensajeService implements IMensajeService {
     public MensajeSalida guardarMensaje(MensajeGuardar mensajeGuardarDTO) {
         Mensaje mensaje = new Mensaje();
 
-        Optional<Oferta> ofertaOptional = ofertaRepository.findById(mensajeGuardarDTO.getIdOferta());
         Optional<Usuario> remitenteOptional = usuarioRepository.findById(mensajeGuardarDTO.getIdRemitente());
         Optional<Usuario> destinatarioOptional = usuarioRepository.findById(mensajeGuardarDTO.getIdDestinatario());
 
-        if (ofertaOptional.isPresent() && remitenteOptional.isPresent() && destinatarioOptional.isPresent()) {
-            Oferta oferta = ofertaOptional.get();
+        if (remitenteOptional.isPresent() && destinatarioOptional.isPresent()) {
             Usuario remitente = remitenteOptional.get();
             Usuario destinatario = destinatarioOptional.get();
 
             mensaje.setContenidoMensaje(mensajeGuardarDTO.getContenidoMensaje());
-            mensaje.setOferta(oferta);
             mensaje.setRemitente(remitente);
             mensaje.setDestinatario(destinatario);
 
@@ -52,6 +50,7 @@ public class MensajeService implements IMensajeService {
         }
         return null;
     }
+
 
     @Override
     public List<MensajeSalida> obtenerMensajesPorOferta(Long idOferta) {
@@ -62,10 +61,15 @@ public class MensajeService implements IMensajeService {
     }
 
     @Override
-    public List<MensajeSalida> obtenerMensajesEntreUsuarios(Long idOferta, Long idRemitente, Long idDestinatario) {
-        return mensajeRepository.findByOfertaIdOfertaAndRemitenteIdUsuarioAndDestinatarioIdUsuario(idOferta, idRemitente, idDestinatario)
-                .stream()
+    public Map<Long, Map<Long, List<MensajeSalida>>> obtenerMensajesAgrupados(Long userId) {
+        List<Mensaje> mensajes = mensajeRepository.findMensajesPorUsuario(userId);
+
+        return mensajes.stream()
                 .map(mensaje -> modelMapper.map(mensaje, MensajeSalida.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(
+                        MensajeSalida::getIdDestinatario,
+                        Collectors.groupingBy(MensajeSalida::getIdRemitente)
+                ));
     }
+
 }

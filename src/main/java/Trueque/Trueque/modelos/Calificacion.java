@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -42,6 +44,6 @@ public class Calificacion {
 
     @PrePersist
     protected void onCreate(){
-        this.fechaCalificacion = LocalDateTime.now();
+        this.fechaCalificacion = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
     }
 }

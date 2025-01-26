@@ -15,7 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://xchangesv.es",
+        "https://api.xchangesv.es",
+        "https://api.xchangesv.es:8080",
+        "http://xchangesv.es",
+        "http://api.xchangesv.es",
+        "http://api.xchangesv.es:8080"
+})
 @RestController
 @RequestMapping("/solicitudes")
 public class SolicitudController {
@@ -44,17 +52,18 @@ public class SolicitudController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<SolicitudSalida> crear(
             @RequestParam("imagenes") List<MultipartFile> imagenes,
             @RequestPart("solicitud") SolicitudGuardar solicitudGuardar) throws IOException {
-
+        System.out.println("Solicitud: " + solicitudGuardar);
+        System.out.println("Número de imágenes: " + (imagenes != null ? imagenes.size() : 0));
         SolicitudSalida solicitudSalida = solicitudServe.crear(solicitudGuardar, imagenes);
         return ResponseEntity.ok(solicitudSalida);
     }
 
     @PutMapping("/edit/{idSolicitud}")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<SolicitudSalida> editar(
             @PathVariable Long idSolicitud,
             @RequestParam("imagenes") List<MultipartFile> imagenes,
@@ -68,13 +77,20 @@ public class SolicitudController {
     }
 
     @GetMapping("/findById/{idSolicitud}")
-    @PreAuthorize("hasAuthority('usuario')")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
     public ResponseEntity<SolicitudSalida> obtenerPorId(@PathVariable Long idSolicitud) {
         SolicitudSalida solicitud = solicitudServe.obtenerPorId(idSolicitud);
         if (solicitud != null) {
             return ResponseEntity.ok(solicitud);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/aceptar/{idSolicitud}")
+    @PreAuthorize("hasAuthority('admin') or hasAuthority('usuario')")
+    public ResponseEntity<String> aceptarSolicitud(@PathVariable Long idSolicitud) {
+        solicitudServe.aceptarSolicitud(idSolicitud);
+        return ResponseEntity.ok("Solicitud aceptada");
     }
 
     @DeleteMapping("/delete/{idSolicitud}")

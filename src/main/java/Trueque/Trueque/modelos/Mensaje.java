@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -38,6 +40,6 @@ public class Mensaje {
 
     @PrePersist
     protected void onCreate() {
-        this.fechaEnvio = LocalDateTime.now();
+        this.fechaEnvio = ZonedDateTime.now(ZoneId.of("America/El_Salvador")).toLocalDateTime();
     }
 }
